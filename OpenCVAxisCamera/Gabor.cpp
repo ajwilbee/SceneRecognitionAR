@@ -45,6 +45,7 @@ Mat Gabor::apply_Theta(Mat x, Mat y,double co1, double co2){
 	Mat theta;
 	x.copyTo(theta);
 	double temp;
+	cout << "this change is in the test branch";
 	cout << s.height;
 	cout << s.width;
 	for (int i = 0; i < s.height; ++i){
