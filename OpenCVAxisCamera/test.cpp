@@ -2,6 +2,8 @@
 #include "opencv/highgui.h"
 #include "Channel.h"
 #include "Gabor.h"
+#include <iostream>
+using namespace std;
 
 
 using namespace cv;
@@ -23,6 +25,9 @@ int main(void)
 	//namedWindow("LayerOther", 1);
 
 	Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
+	namedWindow("test", 1);
+	imshow("test", test.getFilter());
+	cout << "end";
 	/*while (waitKey(10)!='ESC')
 	{
 		videoCapture >> img;

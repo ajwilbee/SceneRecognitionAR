@@ -2,8 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/imgproc/imgproc.hpp"
-#include <iostream>
-using namespace std;
+
 
 using namespace cv;
 int params[5];
@@ -48,9 +47,6 @@ Mat Gabor::apply_Theta(Mat x, Mat y,double co1, double co2){
 	Mat theta;
 	x.copyTo(theta);
 	double temp;
-	cout << "this change is in the test branch";
-	cout << s.height;
-	cout << s.width;
 	for (int i = 0; i < s.height; ++i){
 
 		for (int j = 0; j < s.width; ++j){
@@ -76,18 +72,28 @@ Mat Gabor::makegb(){
 	Mat x_theta = apply_Theta(x, y, cos(theta), sin(theta));
 	Mat y_theta = apply_Theta(x, y, -sin(theta), cos(theta));
 
+	Size s = x_theta.size();
+	Mat gaborMask(s, CV_64FC1);
+	double sx2 = pow(sigma_x, 2);
+	double sy2 = pow(sigma_y, 2);
+	double pi = 3.14159;
+	for (int i = 0; i < s.height; i++)
+	{
+		for (int j = 0; j < s.height; j++){
+			double tx = pow(x_theta.at<double>(j, i), 2);
+			double ty = pow(y_theta.at<double>(j, i), 2);
+			double arg = -0.5*(tx / sx2 + ty / sy2)*cos((2 * pi / (lambda*x_theta.at<double>(j, i)) + psi));
+			gaborMask.at<double>(j, i) = exp(arg);
+		}
 
-	/*[x y] = meshgrid(-floor(sz / 2) :floor(sz / 2), floor(sz / 2) : -1 : floor(-sz / 2));*/
-
-	//x_theta = x*cos(theta) + y*sin(theta);
-	//y_theta = -x*sin(theta) + y*cos(theta);
-
+	}
 	//Mat gb = exp(-0.5*(x_theta. ^ 2 / sigma_x ^ 2 + y_theta. ^ 2 / sigma_y ^ 2)).*cos(2 * pi / lambda*x_theta + psi);
 
-	return Filter;
+	return gaborMask;
 }
 Mat Gabor::makeFilter(){
 	Filter = makegb();
+
 	return Filter;
 }
 
