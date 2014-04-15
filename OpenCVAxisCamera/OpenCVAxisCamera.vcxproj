@@ -68,12 +68,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Channel.cpp" />
+    <ClCompile Include="CvGabor.cpp" />
     <ClCompile Include="Gabor.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Channel.h" />
+    <ClInclude Include="CvGabor.h" />
     <ClInclude Include="Gabor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Project1\Project1\opencv-logo-white.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,6 +24,9 @@
     <ClCompile Include="Gabor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CvGabor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Channel.h">
@@ -32,5 +35,13 @@
     <ClInclude Include="Gabor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CvGabor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Project1\Project1\opencv-logo-white.png">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
