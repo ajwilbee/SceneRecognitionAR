@@ -29,6 +29,7 @@ public:
 	void setParams(int b, double gamm, double ps, double lambd, double thet);
 	Mat linspace(double sval, double endval, int interval);
 	Mat apply_Theta(Mat x, Mat y,double co1,double co2); // takes two coefficients and multiplies and sums them for each element
+	Mat flip_Mat(Mat x);
 	double* getParams();
 
 	~Gabor();

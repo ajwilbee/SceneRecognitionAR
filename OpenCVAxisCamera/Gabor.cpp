@@ -23,14 +23,16 @@ Gabor::Gabor(int b, double gamm, double ps, double lambd, double thet)
 
 Mat Gabor::linspace(double sval, double endval, int interval)
 {
-	double spacing = abs(endval - sval + 1);
+	double spacing = abs(endval - sval) +1;
 	double temp = 0;
 	Mat y(spacing, spacing, CV_64FC1); // creates a row that is linearly spaced
 	for (int i = 0; i < y.cols; ++i)
 	{
 		for (int j = 0; j < y.cols; ++j){
+			double temp  = sval + j*(endval - sval) / spacing;
 			y.at<double>(j, i) = ceil(sval + j*(endval - sval) / spacing);
-			//cout << y.at<double>(j, i);
+			
+
 		}
 		//cout << endl; 
 	}
@@ -42,6 +44,7 @@ Mat Gabor::linspace(double sval, double endval, int interval)
 Mat Gabor::apply_Theta(Mat x, Mat y,double co1, double co2){
 
 	Size s = x.size();
+	Size sy = y.size();
 	Mat theta;
 	x.copyTo(theta);
 	double temp;
@@ -51,13 +54,9 @@ Mat Gabor::apply_Theta(Mat x, Mat y,double co1, double co2){
 	for (int i = 0; i < s.height; ++i){
 
 		for (int j = 0; j < s.width; ++j){
-			cout << x.at<double>(i, j);
-			//co1 + y.at<double>(i, j)*co2;
-			//theta.at<doubleb>(i,j) = temp;
-			cout << j;
-			cout << endl;
+			theta.at<double>(i, j) = x.at<double>(j, i)*co1 + y.at<double>(i, j)*co2;
 		}
-		cout << "new row";
+
 	}
 	return theta;
 }
@@ -71,7 +70,9 @@ Mat Gabor::makegb(){
 		sz = sz + 1;
 	}
 	Mat x = linspace(-floor(sz / 2), floor(sz / 2), 1);
-	Mat y = linspace(floor(sz / 2), -floor(sz / 2), 1);
+	Mat y = flip_Mat(x);
+	
+	
 	Mat x_theta = apply_Theta(x, y, cos(theta), sin(theta));
 	Mat y_theta = apply_Theta(x, y, -sin(theta), cos(theta));
 
@@ -92,6 +93,19 @@ Mat Gabor::makeFilter(){
 
 Mat Gabor::getFilter(){
 	return Filter;
+}
+
+Mat Gabor::flip_Mat(Mat x){
+	Size s = x.size();
+	Mat y(s.width, s.width, CV_64FC1);
+
+	for (int i = 0; i < s.height; i++)
+	{
+		for (int j = 0; j < s.height; j++){
+			y.at<double>(j, i) = 0 - x.at<double>(j, i);
+		}
+	}
+	return y;
 }
 
 void Gabor::setParams(int b, double gamm, double ps, double lambd, double thet){
