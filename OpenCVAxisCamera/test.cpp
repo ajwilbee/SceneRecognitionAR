@@ -8,7 +8,6 @@
 #include <iostream>
 using namespace std;
 
-// change to make sure
 using namespace cv;
 
 int main(void)
@@ -32,22 +31,24 @@ int main(void)
 	{
 		videoCapture >> img;
 		bool temp =  img.empty();
-		
-		
+		Mat filter = Mat(img.size(), img.type() );//CV_32FC1
 		cvtColor(img, hsv, CV_RGB2HSV);
-		
 
+		//Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
+
+		CvGabor temp1 = CvGabor(0, .25, 2);
+		IplImage ipl_img = img.operator IplImage();
+		IplImage *filtered = &filter.operator IplImage();
+		temp1.conv_img(&ipl_img, filtered, 2);
+		Mat cvmat(filtered);
+
+		int t1 = img.type();
+		int t2 = cvmat.type();
 		imshow("RAW", img);
-		imshow("HSV", hsv);
+		imshow("HSV", cvmat);
 	}
 
-	//const char* filename = "opencv-logo-white.png";
-	//Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
-	//Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
-
-	//imshow("test", I);
-	//cout << "end";
-	//CvGabor temp = CvGabor(1, .5, 1);
+	
 
 	
 }
