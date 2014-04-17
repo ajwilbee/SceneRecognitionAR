@@ -18,24 +18,24 @@
     <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Channel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gabor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CvGabor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Color_Channel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Channel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Gabor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CvGabor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Color_Channel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

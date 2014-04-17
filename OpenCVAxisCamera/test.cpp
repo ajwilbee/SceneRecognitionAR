@@ -2,7 +2,6 @@
 #include <opencv2/core/core.hpp>
 #include "opencv/highgui.h"
 #include "opencv2/imgproc/imgproc.hpp"
-#include "Channel.h"
 #include "Gabor.h"
 #include "CvGabor.h"
 #include <iostream>
@@ -21,7 +20,6 @@ int main(void)
 	}
 	Mat img;
 	Mat hsv;
-	Channel fourier = Channel();
 	namedWindow("RAW", 1);
 	namedWindow("HSV", 1);
 	namedWindow("LayerOther", 1);
