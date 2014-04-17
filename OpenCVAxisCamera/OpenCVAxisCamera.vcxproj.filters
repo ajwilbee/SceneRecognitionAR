@@ -27,6 +27,9 @@
     <ClCompile Include="Color_Channel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Features.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gabor.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Color_Channel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Features.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
