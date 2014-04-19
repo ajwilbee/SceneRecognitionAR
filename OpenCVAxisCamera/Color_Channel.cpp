@@ -10,7 +10,7 @@ Color_Channel::Color_Channel(Mat I){
 }
 
 void Color_Channel::Initialize(Mat I){
-	setImage(I);
+	OriginalImage = I;
 	CreateColorPlanes();
 	Mat pyr1[depth];
 	Mat pyr2[depth];
@@ -56,7 +56,7 @@ void Color_Channel::CreateColorPlanes(){
 	delete[] colors;
 }
 Mat* Color_Channel::MakePyramid(Mat I, Mat* dst){
-	dst[0] = I;
+	I.copyTo(dst[0]);
 	for (int x = 1; x <= depth; x++){
 		pyrDown(dst[x - 1], dst[x], Size(dst[x - 1].cols / 2, dst[x - 1].rows / 2));
 

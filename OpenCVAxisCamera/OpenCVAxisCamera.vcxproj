@@ -71,6 +71,7 @@
     <ClCompile Include="CvGabor.cpp" />
     <ClCompile Include="Features.cpp" />
     <ClCompile Include="Gabor.cpp" />
+    <ClCompile Include="Orienation_Channel.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +79,7 @@
     <ClInclude Include="CvGabor.h" />
     <ClInclude Include="Features.h" />
     <ClInclude Include="Gabor.h" />
+    <ClInclude Include="Orienation_Channel.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Project1\Project1\opencv-logo-white.png" />
