@@ -4,10 +4,14 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "Gabor.h"
 #include "CvGabor.h"
+#include "Color_Channel.h"
+#include "Orienation_Channel.h"
 #include <iostream>
 using namespace std;
 
 using namespace cv;
+
+Mat* CreateGistVector(Mat I);
 
 int main(void)
 {
@@ -49,4 +53,45 @@ int main(void)
 	
 
 	
+}
+
+Mat* CreateGistVector(Mat I){
+	
+	//Color_Channel CC = Color_Channel(I);
+	//Orienation_Channel OC = Orienation_Channel(I);
+	////make one solid GistVector
+	//double** GistVector = ;
+	//int range = 4;
+	//for (int i = 0; i < range; i++){
+	//	GistVector[i] = *OC.F0.getExtractedFeatures;
+	//}
+
+	////int offset = range;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &OC.F45.getExtractedFeatures[i];
+	////}
+	////
+	////offset = offset + range;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &OC.F90.getExtractedFeatures[i];
+	////}
+	////offset = offset + range;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &OC.F135.getExtractedFeatures[i];
+	////}
+	////offset = offset + range;
+	////int range = 6;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &CC.RG.getExtractedFeatures[i];
+	////}
+	////offset = offset + range;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &CC.BY.getExtractedFeatures[i];
+	////}
+	////offset = offset + range;
+	////for (int i = 0; i < range; i++){
+	////	GistVector[offset + i] = &CC.Intensity.getExtractedFeatures[i];
+	////}
+
+	return &Mat();
 }
