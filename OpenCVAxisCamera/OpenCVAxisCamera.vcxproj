@@ -67,6 +67,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Downloads\cpp\src\alglibinternal.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\alglibmisc.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\ap.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\dataanalysis.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\linalg.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\optimization.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\solvers.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\specialfunctions.cpp" />
+    <ClCompile Include="..\..\..\Downloads\cpp\src\statistics.cpp" />
     <ClCompile Include="Color_Channel.cpp" />
     <ClCompile Include="CvGabor.cpp" />
     <ClCompile Include="Features.cpp" />
@@ -75,6 +84,15 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Downloads\cpp\src\alglibinternal.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\alglibmisc.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\ap.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\dataanalysis.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\linalg.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\optimization.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\solvers.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\specialfunctions.h" />
+    <ClInclude Include="..\..\..\Downloads\cpp\src\statistics.h" />
     <ClInclude Include="Color_Channel.h" />
     <ClInclude Include="CvGabor.h" />
     <ClInclude Include="Features.h" />
