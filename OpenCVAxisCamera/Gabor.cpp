@@ -82,8 +82,16 @@ Mat Gabor::makegb(){
 		for (int j = 0; j < s.height; j++){
 			double tx = pow(x_theta.at<double>(j, i), 2);
 			double ty = pow(y_theta.at<double>(j, i), 2);
-			double arg = -0.5*(tx / sx2 + ty / sy2)*cos((2 * pi / (lambda*x_theta.at<double>(j, i)) + psi));
+			double arg = -0.5*(tx / sx2 + ty / sy2)*cos((2 * pi / (lambda*x_theta.at<double>(j, i)+.00000001) + psi));
+			
 			gaborMask.at<double>(j, i) = exp(arg);
+			if (exp(arg) > 1){
+				gaborMask.at<double>(j, i) = 1;
+
+			}
+			if (j == 35 && i == 35){
+				int x = 0;
+			}
 		}
 
 	}

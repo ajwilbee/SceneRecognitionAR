@@ -705,6 +705,7 @@ void CvGabor::conv_img(IplImage *src, IplImage *dst, int Type)
 		break;
 	case CV_GABOR_IMAG:
 		cvFilter2D((CvMat*)mat, (CvMat*)mat, (CvMat*)Imag, cvPoint((Width - 1) / 2, (Width - 1) / 2));
+		cvShowImage("test", mat);
 		break;
 	case CV_GABOR_MAG:
 		cvFilter2D((CvMat*)mat, (CvMat*)rmat, (CvMat*)Real, cvPoint((Width - 1) / 2, (Width - 1) / 2));
