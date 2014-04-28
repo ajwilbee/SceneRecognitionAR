@@ -81,6 +81,7 @@
     <ClCompile Include="Features.cpp" />
     <ClCompile Include="FFNeuralNetwork.cpp" />
     <ClCompile Include="Gabor.cpp" />
+    <ClCompile Include="GenAlg.cpp" />
     <ClCompile Include="Orienation_Channel.cpp" />
     <ClCompile Include="Params.cpp" />
     <ClCompile Include="test.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="Features.h" />
     <ClInclude Include="FFNeuralNetwork.h" />
     <ClInclude Include="Gabor.h" />
+    <ClInclude Include="GenAlg.h" />
     <ClInclude Include="Orienation_Channel.h" />
     <ClInclude Include="Params.h" />
   </ItemGroup>
