@@ -86,11 +86,13 @@ private:
 	int m_NumHiddenLayers;
 	int m_NeuronsPerHiddenLayer;
 	int m_totalNumberofWeights;
+	int m_Bias;
+	double m_Response;
 	// storage for each layer of neurons including the output layer
-
+	std::vector<double> curweights;
 	std::vector<SNeuronLayer> m_vec_Layers;
 public:
-	FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLayers, int NeuronsPerHiddenLayer);
+	FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLayers, int NeuronsPerHiddenLayer, int Bias, double response);
 
 	void CreateNet();
 	//gets the weights for the NN

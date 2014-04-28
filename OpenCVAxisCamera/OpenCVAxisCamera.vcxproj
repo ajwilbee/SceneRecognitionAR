@@ -82,6 +82,7 @@
     <ClCompile Include="FFNeuralNetwork.cpp" />
     <ClCompile Include="Gabor.cpp" />
     <ClCompile Include="Orienation_Channel.cpp" />
+    <ClCompile Include="Params.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="FFNeuralNetwork.h" />
     <ClInclude Include="Gabor.h" />
     <ClInclude Include="Orienation_Channel.h" />
+    <ClInclude Include="Params.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Project1\Project1\opencv-logo-white.png" />
