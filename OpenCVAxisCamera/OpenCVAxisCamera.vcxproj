@@ -79,6 +79,7 @@
     <ClCompile Include="Color_Channel.cpp" />
     <ClCompile Include="CvGabor.cpp" />
     <ClCompile Include="Features.cpp" />
+    <ClCompile Include="FFNeuralNetwork.cpp" />
     <ClCompile Include="Gabor.cpp" />
     <ClCompile Include="Orienation_Channel.cpp" />
     <ClCompile Include="test.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="Color_Channel.h" />
     <ClInclude Include="CvGabor.h" />
     <ClInclude Include="Features.h" />
+    <ClInclude Include="FFNeuralNetwork.h" />
     <ClInclude Include="Gabor.h" />
     <ClInclude Include="Orienation_Channel.h" />
   </ItemGroup>
