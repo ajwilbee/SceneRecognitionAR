@@ -34,8 +34,8 @@ SNeuron::SNeuron(int NumInputs) : m_NumInputs(NumInputs + 1)
 	{
 
 		//set up the weights with an initial random value
-
-		m_vecWeight.push_back(rand());
+		double temp = (rand() % 100) / 100;
+		m_vecWeight.push_back(temp);
 
 	}
 
@@ -94,7 +94,10 @@ private:
 public:
 	FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLayers, int NeuronsPerHiddenLayer, int Bias, double response);
 
+	//generates a brand new network with random weights
 	void CreateNet();
+	//clears the network
+	void ClearNet();
 	//gets the weights for the NN
 	std::vector<double> GetWeights()const;
 	//returns the total number of weights in the net

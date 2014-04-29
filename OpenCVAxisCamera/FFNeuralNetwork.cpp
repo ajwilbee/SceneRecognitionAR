@@ -104,6 +104,10 @@ void FFNeuralNetwork::CreateNet(){
 	m_totalNumberofWeights = m_NeuronsPerHiddenLayer*m_NumInputs + m_NumOutputs*m_NeuronsPerHiddenLayer + (m_NumHiddenLayers - 1)* m_NeuronsPerHiddenLayer*m_NeuronsPerHiddenLayer;
 
 }
+
+void FFNeuralNetwork::ClearNet(){
+	m_vec_Layers.clear();
+}
 //gets the weights for the NN can never alter any member variables
 std::vector<double> FFNeuralNetwork::GetWeights()const{
 	std::vector<double> curweights;
