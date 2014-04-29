@@ -86,10 +86,24 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 		}
 
 	}
-	
+	hardThreshold(outputs);
 	return outputs;
 
 }
+void FFNeuralNetwork::hardThreshold(std::vector<double> &doutputs){
+	 
+	for (int i = 0; i < doutputs.size(); i++){
+		if (doutputs[i] < outputThreshold){
+			doutputs[i] = 0;
+
+		}
+		else{
+			doutputs[i] = 1;
+		}
+	}
+}
+
+
 
 void FFNeuralNetwork::CreateNet(){
 	m_vec_Layers.push_back(SNeuronLayer(m_NeuronsPerHiddenLayer, m_NumInputs+1));//hidden layer, the plus one gives the threshold to be multiplied by the bias

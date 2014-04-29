@@ -87,6 +87,7 @@ private:
 	int m_NeuronsPerHiddenLayer;
 	int m_totalNumberofWeights;
 	int m_Bias;
+	const double outputThreshold = .5;
 	double m_Response;
 	// storage for each layer of neurons including the output layer
 	std::vector<double> curweights;
@@ -109,7 +110,7 @@ public:
 	//calculates the outputs from a set of inputs
 
 	std::vector<double> Update(std::vector<double> &inputs);
-
+	void hardThreshold(std::vector<double> &doutputs);
 	//sigmoid response curve
 
 	inline double Sigmoid(double activation, double response);
