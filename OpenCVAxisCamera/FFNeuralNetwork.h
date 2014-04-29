@@ -23,23 +23,7 @@ struct SNeuron
 	SNeuron(int NumInputs);
 
 };
-SNeuron::SNeuron(int NumInputs) : m_NumInputs(NumInputs + 1)
 
-{
-
-	//we need an additional weight for the bias hence the +1
-
-	for (int i = 0; i<NumInputs + 1; ++i)
-
-	{
-
-		//set up the weights with an initial random value
-		double temp = (rand() % 100) / 100;
-		m_vecWeight.push_back(temp);
-
-	}
-
-}
 
 struct SNeuronLayer
 {
@@ -57,22 +41,12 @@ struct SNeuronLayer
 
 };
 
-SNeuronLayer::SNeuronLayer(int NumNeurons, int NumInputsPerNeuron) : m_NumNeurons(NumNeurons)
-{
-	for (int i = 0; i<NumNeurons + 1; ++i)
-
-	{
-
-		//set up Layer with all neurons with random weighting
-
-		m_vecNeurons.push_back(SNeuron(NumInputsPerNeuron));
-
-	}
-
-}
 
 
-
+// the neural network must output a single value corrisponding to the class
+// that means the regardless of the number of output nodes the network must have
+// an overloaded method to translate the truth table into its proper class
+// the GA will only be able to handle a vector of doubles
 class FFNeuralNetwork
 {
 	
