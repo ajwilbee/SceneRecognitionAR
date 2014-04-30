@@ -8,6 +8,7 @@
 #include "Orienation_Channel.h"
 #include "Resource.h"
 #include "GenAlg.h"
+#include "dataanalysis.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -30,6 +31,7 @@ Mat horz = Mat(3, 3, CV_64FC1);
 int main(void)
 {
 	int numIter = 100;
+	//this is the input data from the cancer study
 	std::vector<NNInputData> inData = readExcelCSV();
 	double inputsize = inData[0].features.size();
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
@@ -106,6 +108,7 @@ int main(void)
 	
 }
 
+//imput data from an excell csv file, currently reading a CSV file
 std::vector<NNInputData> readExcelCSV(){
 	std::vector<NNInputData> temp;
 	std::ifstream test("Hw2CancerData.csv"); // declare file stream: http://www.cplusplus.com/reference/iostream/ifstream/
@@ -154,7 +157,8 @@ std::vector<NNInputData> readExcelCSV(){
 
 
 Mat* CreateGistVector(Mat I){
-	
+	//real_2d_array
+	//pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v)
 	//Color_Channel CC = Color_Channel(I);
 	//Orienation_Channel OC = Orienation_Channel(I);
 	////make one solid GistVector
