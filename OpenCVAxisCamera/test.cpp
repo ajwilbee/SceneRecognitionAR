@@ -29,11 +29,20 @@ Mat horz = Mat(3, 3, CV_64FC1);
 
 int main(void)
 {
+	int numIter = 100;
 	std::vector<NNInputData> inData = readExcelCSV();
-	FFNeuralNetwork* myNN = new FFNeuralNetwork(inData.size(), 1, 1, 30, -1, .1);
+	double inputsize = inData[0].features.size();
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 30, -1, .1);
 	GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-	MyEarth->Epoch(currentpopulation);
+	for (int i = 0; i < numIter; i++){
+		MyEarth->Epoch(currentpopulation);
+		std::vector<SGenome> temp = MyEarth->GetChromos();
+		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+		cout << MyEarth->BestFitness()/inData.size();
+		cout << "\n";
+	}
+
 
 	// image processing testing
 

@@ -12,7 +12,7 @@ FFNeuralNetwork::FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLay
 	m_NeuronsPerHiddenLayer = NeuronsPerHiddenLayer;
 	m_Bias = Bias;
 	m_Response = response;
-
+	CreateNet();
 
 }
 
@@ -49,7 +49,7 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 		}
 		outputs.clear();
 
-		cWeight = 0;
+		
 
 		//for each neuron sum the (inputs * corresponding weights).Throw 
 
@@ -58,6 +58,7 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 		for (int j = 0; j< m_vec_Layers[i].m_NumNeurons; ++j)
 
 		{
+			cWeight = 0;
 			double netinput = 0;
 
 			int NumInputs = m_vec_Layers[i].m_vecNeurons[j].m_NumInputs;
@@ -105,16 +106,17 @@ void FFNeuralNetwork::hardThreshold(std::vector<double> &doutputs){
 
 
 void FFNeuralNetwork::CreateNet(){
-	m_vec_Layers.push_back(SNeuronLayer(m_NeuronsPerHiddenLayer, m_NumInputs+1));//hidden layer, the plus one gives the threshold to be multiplied by the bias
+	m_vec_Layers.push_back(SNeuronLayer(m_NeuronsPerHiddenLayer, m_NumInputs));//hidden layer, the plus one gives the threshold to be multiplied by the bias
 	//more layers if desired would go here
-	m_vec_Layers.push_back(SNeuronLayer(m_NumOutputs, m_NeuronsPerHiddenLayer+1));//output layer, again +1 is threshold
+	m_vec_Layers.push_back(SNeuronLayer(m_NumOutputs, m_NeuronsPerHiddenLayer));//output layer, again +1 is threshold
 	
 	/*
 		neuron/layer*wieghts/neuron = weights per layer 
 		to extend the below to include more hidden layers just add m_NeuronsPerHiddenLayer^2 for each hidden
 		layer more than 1.
 	*/
-	m_totalNumberofWeights = m_NeuronsPerHiddenLayer*m_NumInputs + m_NumOutputs*m_NeuronsPerHiddenLayer + (m_NumHiddenLayers - 1)* m_NeuronsPerHiddenLayer*m_NeuronsPerHiddenLayer;
+	//     the 1+ accounts for the bias
+	m_totalNumberofWeights = m_NeuronsPerHiddenLayer*(1+m_NumInputs) + m_NumOutputs*(1+m_NeuronsPerHiddenLayer) + (m_NumHiddenLayers - 1)* m_NeuronsPerHiddenLayer*m_NeuronsPerHiddenLayer;
 
 }
 
@@ -150,9 +152,13 @@ void FFNeuralNetwork::PutWeights(std::vector<double> &weights){
 	// takes the wieghts from the learning function and puts them back into the proper place
 	// in the neural network may want to fix the addressing so the counter is not neccessary
 	// but it is good enough for now.
+	//int matchWeight = m_vec_Layers.size()*m_vec_Layers.at(0).m_vecNeurons.size()*m_vec_Layers.at(0).m_vecNeurons.at(0).m_vecWeight.size();
+	//int check = m_vec_Layers.size();
 	for (int i = 0; i < m_vec_Layers.size(); i++){
+		//int check2 = m_vec_Layers.at(0).m_vecNeurons.size();
 		for (int j = 0; j < m_vec_Layers.at(i).m_vecNeurons.size(); j++){
-			for (int k = 0; k < m_vec_Layers.at(i).m_vecNeurons.at(j).m_vecWeight.size(); k++){
+			//int check3 = m_vec_Layers.at(0).m_vecNeurons.at(0).m_vecWeight.size();
+			for (int k = 0; k < m_vec_Layers.at(i).m_vecNeurons.at(j).m_vecWeight.size(); k++){ // there is a bias causing an additional weight per neuron
 				m_vec_Layers.at(i).m_vecNeurons.at(j).m_vecWeight.at(k) = weights.at(counter);
 				counter++;
 			}
