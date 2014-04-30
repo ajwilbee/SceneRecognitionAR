@@ -1,5 +1,4 @@
 #pragma once
-#define e 2.71828183
 #include "Resource.h"
 
 /*
@@ -22,7 +21,7 @@ class FFNeuralNetwork
 	
 
 private:
-
+	const double e = 2.71828183;
 	int m_NumInputs;
 	int m_NumOutputs;
 	int m_NumHiddenLayers;

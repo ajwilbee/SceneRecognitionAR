@@ -11,8 +11,24 @@
 #include "dataanalysis.h"
 #include <iostream>
 #include <fstream>
+#include "ap.h"
+#include "alglibinternal.h"
+#include "linalg.h"
+#include "statistics.h"
+#include "alglibmisc.h"
+#include "specialfunctions.h"
+#include "solvers.h"
+#include "optimization.h"
+#include "ap.h"
+#include "alglibinternal.h"
+#include "linalg.h"
+#include "statistics.h"
+#include "alglibmisc.h"
+#include "specialfunctions.h"
+#include "solvers.h"
+#include "optimization.h"
 using namespace std;
-
+using namespace alglib;
 using namespace cv;
 
 
@@ -30,9 +46,12 @@ Mat horz = Mat(3, 3, CV_64FC1);
 
 int main(void)
 {
+	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
+	CreateGistVector(inputIm);
+
 	int numIter = 100;
 	//this is the input data from the cancer study
-	std::vector<NNInputData> inData = readExcelCSV();
+	/*std::vector<NNInputData> inData = readExcelCSV();
 	double inputsize = inData[0].features.size();
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
 	GenAlg* MyEarth = new GenAlg(10, .05,.5, myNN, inData);
@@ -43,7 +62,7 @@ int main(void)
 		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 		cout << MyEarth->BestFitness()/inData.size();
 		cout << "\n";
-	}
+	}*/
 
 
 	// image processing testing
@@ -157,10 +176,12 @@ std::vector<NNInputData> readExcelCSV(){
 
 
 Mat* CreateGistVector(Mat I){
-	//real_2d_array
-	//pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v)
-	//Color_Channel CC = Color_Channel(I);
-	//Orienation_Channel OC = Orienation_Channel(I);
+	/*real_2d_array PCAarray;
+	PCAarray;
+	pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v);*/
+	Color_Channel CC = Color_Channel(I);
+	Orienation_Channel OC = Orienation_Channel(I);
+	CC.BY.getExtractedFeatures();
 	////make one solid GistVector
 	//double** GistVector = ;
 	//int range = 4;

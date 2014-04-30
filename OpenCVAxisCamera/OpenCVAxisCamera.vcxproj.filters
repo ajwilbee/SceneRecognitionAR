@@ -89,9 +89,6 @@
     <ClInclude Include="Orienation_Channel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Downloads\cpp\src\dataanalysis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FFNeuralNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>

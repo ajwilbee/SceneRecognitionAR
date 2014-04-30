@@ -88,7 +88,6 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Downloads\cpp\src\dataanalysis.h" />
     <ClInclude Include="alglibinternal.h" />
     <ClInclude Include="alglibmisc.h" />
     <ClInclude Include="ap.h" />
