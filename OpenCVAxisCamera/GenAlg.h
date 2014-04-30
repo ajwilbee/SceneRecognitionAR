@@ -82,7 +82,7 @@ public:
 	std::vector<SGenome> GetChromos()const{ return m_vecPop; }
 
 	double  AverageFitness()const{ return m_dTotalFitness / m_iPopSize; }
-
+	double  fRand(double fMin, double fMax);
 	double  BestFitness()const{ return m_dBestFitness; }
 
 	~GenAlg();

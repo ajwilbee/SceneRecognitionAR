@@ -32,8 +32,8 @@ int main(void)
 	int numIter = 100;
 	std::vector<NNInputData> inData = readExcelCSV();
 	double inputsize = inData[0].features.size();
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 30, -1, .1);
-	GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
+	GenAlg* MyEarth = new GenAlg(10, .05,.5, myNN, inData);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){
 		MyEarth->Epoch(currentpopulation);
@@ -123,7 +123,7 @@ std::vector<NNInputData> readExcelCSV(){
 		int counter = 0;
 		while (std::getline(ss, token, ','))
 		{
-			if (counter >= 0){
+			if (counter >= 1){
 				holder.push_back(atof(token.c_str()));
 			}
 			counter++;

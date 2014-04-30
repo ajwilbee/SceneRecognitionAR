@@ -55,7 +55,7 @@ public:
 	void hardThreshold(std::vector<double> &doutputs);
 	//sigmoid response curve
 
-	inline double Sigmoid(double activation, double response);
+	double Sigmoid(double activation, double response);
 
 	~FFNeuralNetwork();
 };

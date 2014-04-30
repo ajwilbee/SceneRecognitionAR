@@ -39,13 +39,13 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 
 
 	//For each layer....
-
+	std::vector<double> tempInputs = inputs;
 	for (int i = 0; i<m_NumHiddenLayers + 1; ++i)
 
 	{
 		if (i > 0)
 		{
-			inputs = outputs;
+			tempInputs = outputs;
 		}
 		outputs.clear();
 
@@ -69,7 +69,7 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 
 			{
 				//sum the weights x inputs
-				netinput += m_vec_Layers[i].m_vecNeurons[j].m_vecWeight[k] * inputs[cWeight++];
+				netinput += m_vec_Layers[i].m_vecNeurons[j].m_vecWeight[k] * tempInputs[cWeight++];
 			}
 
 			//add in the bias
@@ -79,13 +79,15 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 
 			//The combined activation is first filtered through the sigmoid 
 
-			//function		
-			outputs.push_back(Sigmoid(netinput, m_Response));
+			//function	
+			double sigmoidOut = Sigmoid(netinput, m_Response);//netinput, m_Response
+			outputs.push_back(sigmoidOut);
 	//		cWeight = 0;
 
 		}
 
 	}
+	tempInputs.clear();
 	hardThreshold(outputs);
 	return outputs;
 
@@ -178,7 +180,7 @@ void FFNeuralNetwork::PutWeights(std::vector<double> &weights){
 					to the neuron
 	response = p; this will change the shape of the sigmoid activation 
 */
-inline double FFNeuralNetwork::Sigmoid(double activation, double response){
+double FFNeuralNetwork::Sigmoid(double activation, double response){
 	//check this against biorobo activation
 	return 1 / (1 + pow(e, -activation / response));
 
