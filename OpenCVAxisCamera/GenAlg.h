@@ -1,20 +1,9 @@
 #pragma once
-#include<vector>
 #include "FFNeuralNetwork.h"
+#include "Resource.h"
 
 
-struct SGenome
-{
-	std::vector <double>  vecWeights;
-	double dFitness;
-	SGenome() :dFitness(0){}
-	SGenome(std::vector <double> w, double f) : vecWeights(w), dFitness(f){}
-	//overload '<' used for sorting
-	friend bool operator<(const SGenome& lhs, const SGenome& rhs)
-	{
-		return (lhs.dFitness < rhs.dFitness);
-	}
-};
+
 
 
 
@@ -26,9 +15,9 @@ private:
 	// this is the correct and known classification against which the fitness of the gene is measured
 	std::vector<double> m_correct_Classification;
 	//the current classification from the NN with the given weights
-	std::vector<double> m_NN_Classification;
-	//the test inputs that corrispond to the correct classification
-	std::vector<double> m_Inputs;
+	int m_NN_Classification;
+	//the test inputs that contain the input data, and seperatly the correct output to the system
+	std::vector<NNInputData> m_Inputs;
 	//this holds the entire population of chromosomes
 	std::vector <SGenome> m_vecPop;
 	//size of population
@@ -56,7 +45,7 @@ private:
 	//generation counter
 	int  m_cGeneration;
 	//pointer to the NN to be operated on
-	//FFNeuralNetwork* m_NN;
+	FFNeuralNetwork* m_NN;
 	void  Crossover(const std::vector<double> &mum,
 					const std::vector<double> &dad,
 					std::vector<double>       &baby1,
@@ -72,6 +61,7 @@ private:
 	int Fitness(SGenome gene, int index ); 
 	void  Reset();
 
+	int interpertOutput(std::vector<double> output);
 
 public:
 	
@@ -80,10 +70,8 @@ public:
 	GenAlg(int    popsize,
 		   double MutRat,
 		   double CrossRat,
-		   int    numweights,
 		   FFNeuralNetwork* NN,
-		   std::vector<double> correct_Classification,
-		   std::vector<double> Inputs);
+		   std::vector<NNInputData> Inputs);
 
 	//this runs the GA for one generation.
 

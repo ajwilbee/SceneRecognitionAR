@@ -84,6 +84,7 @@
     <ClCompile Include="GenAlg.cpp" />
     <ClCompile Include="Orienation_Channel.cpp" />
     <ClCompile Include="Params.cpp" />
+    <ClCompile Include="Resource.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +105,7 @@
     <ClInclude Include="GenAlg.h" />
     <ClInclude Include="Orienation_Channel.h" />
     <ClInclude Include="Params.h" />
+    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Project1\Project1\opencv-logo-white.png" />

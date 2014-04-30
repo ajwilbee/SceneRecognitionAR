@@ -1,45 +1,13 @@
 #pragma once
 #define e 2.71828183
-#include<vector>
+#include "Resource.h"
 
 /*
 code used and modified from
 http://www.ai-junkie.com/ann/evolved/nnt6.html
 */
 
-struct SNeuron
-{
 
-	//the number of inputs into the neuron
-
-	int m_NumInputs;
-
-	//the weights for each input
-
-	std::vector<double> m_vecWeight;
-
-	//constructor
-
-	SNeuron(int NumInputs);
-
-};
-
-
-struct SNeuronLayer
-{
-
-	//the number of neurons in this layer
-
-	int m_NumNeurons;
-
-	//the layer of neurons
-
-	std::vector<SNeuron> m_vecNeurons;
-
-	//constructor
-	SNeuronLayer(int NumNeurons, int NumInputsPerNeuron);
-
-};
 
 
 

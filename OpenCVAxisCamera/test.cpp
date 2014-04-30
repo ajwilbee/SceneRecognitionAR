@@ -6,63 +6,82 @@
 #include "CvGabor.h"
 #include "Color_Channel.h"
 #include "Orienation_Channel.h"
+#include "Resource.h"
+#include "GenAlg.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 using namespace cv;
 
+
+
 void createSobels();
 Mat* CreateGistVector(Mat I);
+std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
 Mat d135 = Mat(3, 3, CV_64FC1);
 Mat vert = Mat(3, 3, CV_64FC1);
 Mat horz = Mat(3, 3, CV_64FC1);
 
+
+
 int main(void)
 {
-	VideoCapture videoCapture("http://axis2.student.rit.edu/mjpg/video.mjpg"); //http://axis1.student.rit.edu/mjpg/video.mjpg
-	cvWaitKey(5000);
+	std::vector<NNInputData> inData = readExcelCSV();
+	FFNeuralNetwork* myNN = new FFNeuralNetwork(inData.size(), 1, 1, 30, -1, .1);
+	GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
+	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	MyEarth->Epoch(currentpopulation);
 
-	if (!videoCapture.isOpened()){
+	// image processing testing
 
-		int temp = 1;
-	}
-	Mat img;
-	Mat hsv;
+	//VideoCapture videoCapture("http://axis2.student.rit.edu/mjpg/video.mjpg"); //http://axis1.student.rit.edu/mjpg/video.mjpg
+	//cvWaitKey(5000);
 
-	namedWindow("RAW", 1);
-	createSobels();
-	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
-	imshow("RAW", inputIm);
-	while (waitKey(10)!='ESC')
-	{
-		videoCapture >> img;
-		
-		bool temp =  img.empty();
-		Mat output;//CV_32FC1
-		cvtColor(img, img, CV_RGB2GRAY);
-		img.copyTo(output);
-		Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
-		Mat AllOnes = Mat::ones(3, 3, img.type());
-		Mat onemore = Mat(img.size(), test.getFilter().type());
-		img.copyTo(onemore);
-		Mat gbfilter = test.getFilter();
-		pyrDown(gbfilter, gbfilter);
-		pyrDown(gbfilter, gbfilter);
+	//if (!videoCapture.isOpened()){
 
-		filter2D(onemore / 255, output, img.depth(), gbfilter);
-		Mat looking = test.getFilter();
-		double t = looking.at<double>(35, 35);
-		//normalize(output, output);
-		output = output/30;
-		output = output *255;
-		
-		Mat done = Mat(img.size(), img.type());
-		output.copyTo(done);
-		imshow("RAW", img);
-		imshow("Filter", gbfilter);
-		imshow("output", done);
+	//	int temp = 1;
+	//}
+	//Mat img;
+	//Mat hsv;
+
+	//namedWindow("RAW", 1);
+	//createSobels();
+	//Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
+	//imshow("RAW", inputIm);
+	//while (waitKey(10)!='ESC')
+	//{
+	//	videoCapture >> img;
+	//	
+	//	bool temp =  img.empty();
+	//	Mat output;//CV_32FC1
+	//	cvtColor(img, img, CV_RGB2GRAY);
+	//	img.copyTo(output);
+	//	Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
+	//	Mat AllOnes = Mat::ones(3, 3, img.type());
+	//	Mat onemore = Mat(img.size(), test.getFilter().type());
+	//	img.copyTo(onemore);
+	//	Mat gbfilter = test.getFilter();
+	//	pyrDown(gbfilter, gbfilter);
+	//	pyrDown(gbfilter, gbfilter);
+
+	//	filter2D(onemore / 255, output, img.depth(), gbfilter);
+	//	Mat looking = test.getFilter();
+	//	double t = looking.at<double>(35, 35);
+	//	//normalize(output, output);
+	//	output = output/30;
+	//	output = output *255;
+	//	
+	//	Mat done = Mat(img.size(), img.type());
+	//	output.copyTo(done);
+	//	imshow("RAW", img);
+	//	imshow("Filter", gbfilter);
+	//	imshow("output", done);
+
+
+	//garbor testing
 		//CvGabor temp1 = CvGabor(0, .25, 2);
 		//IplImage ipl_img = img.operator IplImage();
 		//IplImage *filtered = &filter.operator IplImage();
@@ -71,12 +90,59 @@ int main(void)
 
 	
 		//imshow("HSV", cvmat);
-	}
+	//}
 
 	
 
 	
 }
+
+std::vector<NNInputData> readExcelCSV(){
+	std::vector<NNInputData> temp;
+	std::ifstream test("Hw2CancerData.csv"); // declare file stream: http://www.cplusplus.com/reference/iostream/ifstream/
+	string value;
+	int entry = 0;
+	while (test.good())
+	{
+
+		getline(test, value, '\n'); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
+		cout << entry;
+		cout << "\n";
+		std::istringstream ss(value);
+		string token;
+		std::vector<double> holder;
+		int counter = 0;
+		while (std::getline(ss, token, ','))
+		{
+			if (counter >= 0){
+				holder.push_back(atof(token.c_str()));
+			}
+			counter++;
+		}
+		if (entry == 683){
+			int q = 1;
+		}
+		int p = holder.size();
+		if (p != 0){
+			int CV = holder[p - 1];
+			if (CV == 4){
+				CV = 1;
+			}
+			else{
+				CV = 0;
+			}
+			holder.pop_back();
+			NNInputData t(holder, CV);
+			temp.push_back(t);
+		}
+		entry++;
+	}
+
+
+	test.close();
+	return temp;
+}
+
 
 Mat* CreateGistVector(Mat I){
 	
