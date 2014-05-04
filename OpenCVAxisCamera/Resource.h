@@ -67,6 +67,14 @@ struct ColorFeature
 	ColorFeature();
 };
 
+struct OrientationFeature
+{
+
+	double *ExtractedFeatures;
+	OrientationFeature(Mat *FMap);
+	OrientationFeature();
+};
+
 class Resource
 {
 public:

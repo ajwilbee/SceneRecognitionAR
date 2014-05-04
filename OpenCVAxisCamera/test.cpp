@@ -34,7 +34,7 @@ using namespace cv;
 
 
 void createSobels();
-Mat* CreateGistVector(Mat I);
+void CreateGistVector(Mat I);
 std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
@@ -76,11 +76,22 @@ int main(void)
 	//}
 	//Mat img;
 	//Mat hsv;
-
+	
+	//if (!inputIm.data)                              // Check for invalid input
+	//{
+	//	cout << "Could not open or find the image" << std::endl;
+	//	return -1;
+	//}
 	//namedWindow("RAW", 1);
-	//createSobels();
-	//Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
 	//imshow("RAW", inputIm);
+	//
+	//createSobels();
+	//Mat output;
+	//
+	//filter2D(inputIm, output, inputIm.depth(), d45);
+	//imshow("filtered", output);
+	//waitKey(0);
+
 	//while (waitKey(10)!='ESC')
 	//{
 	//	videoCapture >> img;
@@ -175,12 +186,15 @@ std::vector<NNInputData> readExcelCSV(){
 }
 
 
-Mat* CreateGistVector(Mat I){
+void CreateGistVector(Mat I){
+	Mat copyI;
+	I.copyTo(copyI);
 	/*real_2d_array PCAarray;
 	PCAarray;
 	pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v);*/
-	Color_Channel CC = Color_Channel(I);
 	Orienation_Channel OC = Orienation_Channel(I);
+	Color_Channel CC = Color_Channel(copyI);
+	
 	////make one solid GistVector
 	//double** GistVector = ;
 	//int range = 4;
@@ -214,8 +228,6 @@ Mat* CreateGistVector(Mat I){
 	////for (int i = 0; i < range; i++){
 	////	GistVector[offset + i] = &CC.Intensity.getExtractedFeatures[i];
 	////}
-
-	return &Mat();
 }
 
 void createSobels(){
@@ -251,25 +263,25 @@ void createSobels(){
 	d135.at<double>(2, 1) = -1;
 	d135.at<double>(2, 2) = -2;
 
-	//d45.at<double>(0, 0) = 0;
-	//d45.at<double>(0, 1) = -1;
-	//d45.at<double>(0, 2) = -2;
-	//d45.at<double>(1, 0) = 1;
-	//d45.at<double>(1, 1) = 0;
-	//d45.at<double>(1, 2) = -1;
-	//d45.at<double>(2, 0) = 2;
-	//d45.at<double>(2, 1) = 1;
-	//d45.at<double>(2, 2) = 0;
-
-	d45.at<double>(0, 0) = 1;
-	d45.at<double>(0, 1) = 1;
-	d45.at<double>(0, 2) = 1;
+	d45.at<double>(0, 0) = 0;
+	d45.at<double>(0, 1) = -1;
+	d45.at<double>(0, 2) = -2;
 	d45.at<double>(1, 0) = 1;
-	d45.at<double>(1, 1) = 1;
-	d45.at<double>(1, 2) = 1;
-	d45.at<double>(2, 0) = 1;
+	d45.at<double>(1, 1) = 0;
+	d45.at<double>(1, 2) = -1;
+	d45.at<double>(2, 0) = 2;
 	d45.at<double>(2, 1) = 1;
-	d45.at<double>(2, 2) = 1;
+	d45.at<double>(2, 2) = 0;
+
+	//d45.at<double>(0, 0) = 1;
+	//d45.at<double>(0, 1) = 1;
+	//d45.at<double>(0, 2) = 1;
+	//d45.at<double>(1, 0) = 1;
+	//d45.at<double>(1, 1) = 1;
+	//d45.at<double>(1, 2) = 1;
+	//d45.at<double>(2, 0) = 1;
+	//d45.at<double>(2, 1) = 1;
+	//d45.at<double>(2, 2) = 1;
 
 
 

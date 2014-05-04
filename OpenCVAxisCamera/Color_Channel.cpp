@@ -85,7 +85,7 @@ void Color_Channel::setImage(Mat I){
 
 Color_Channel::~Color_Channel()
 {
-	OriginalImage.deallocate();
+	//OriginalImage.deallocate();
 //dealocate seperatly?
 ///	delete[] ColorPlanes;
 //	delete[] FeatureMapsRG;

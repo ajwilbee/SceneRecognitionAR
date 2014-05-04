@@ -34,9 +34,9 @@ SNeuronLayer::SNeuronLayer(int NumNeurons, int NumInputsPerNeuron) : m_NumNeuron
 
 ColorFeature::ColorFeature(Mat *FMap){
 	static const int NumImgDivisions = 4;
-	int numElem = 6;
-	ExtractedFeatures = new double[NumImgDivisions*NumImgDivisions * 6];
-	double ExtractedFeatures[NumImgDivisions*NumImgDivisions * 6]; // definate array needs no delete
+	static const int numElem = 6;
+	ExtractedFeatures = new double[NumImgDivisions*NumImgDivisions * numElem];
+	double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
 	Size s = FMap[0].size();
 	Mat Image;
 	int stepSizeRow = s.width / NumImgDivisions;
@@ -71,6 +71,48 @@ ColorFeature::ColorFeature(Mat *FMap){
 }
 
 ColorFeature::ColorFeature(){}
+
+OrientationFeature::OrientationFeature(Mat *FMap){
+	static const int NumImgDivisions = 4;
+	static const int numElem = 4;
+	ExtractedFeatures = new double[NumImgDivisions*NumImgDivisions * numElem];
+	double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
+	Size s = FMap[0].size();
+	Mat Image;
+	int stepSizeRow = s.width / NumImgDivisions;
+	int stepSizeColumn = s.height / NumImgDivisions;
+	int counter = 0;
+	// this loop will take the mean of the 16 subsections of the image and place each into an array
+	for (int k = 0; k < numElem; k++){
+		Image = FMap[k];
+		s = Image.size();
+		stepSizeRow = s.width / NumImgDivisions;
+		stepSizeColumn = s.height / NumImgDivisions;
+		for (int i = 0; i < NumImgDivisions; i++){
+			for (int j = 0; j < NumImgDivisions; j++){
+				// check for boundary conditions on the high end, 
+				int tc = stepSizeColumn*(i + 1);
+				int tr = stepSizeRow*(j + 1);
+				if (tr >s.height){
+					tr = s.height;
+				}
+				if (tc >s.width){
+					tc = s.width;
+				}
+				Mat E = FMap[k](Range(stepSizeColumn*i, tc), Range(stepSizeRow*j, tr));
+				ExtractedFeatures[counter] = mean(E)[0]; // values are returned in a vector the same length as the number of layers
+				counter++;
+				E.release();
+			}
+
+		}
+		Image.release();
+	}
+
+}
+OrientationFeature::OrientationFeature(){
+
+}
 
 Resource::Resource()
 {
