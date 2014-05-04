@@ -181,7 +181,6 @@ Mat* CreateGistVector(Mat I){
 	pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v);*/
 	Color_Channel CC = Color_Channel(I);
 	Orienation_Channel OC = Orienation_Channel(I);
-	CC.BY.getExtractedFeatures();
 	////make one solid GistVector
 	//double** GistVector = ;
 	//int range = 4;

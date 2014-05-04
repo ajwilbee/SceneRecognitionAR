@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
-
-
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
+using namespace cv;
 struct SGenome
 {
 	std::vector <double>  vecWeights;
@@ -55,6 +57,14 @@ struct NNInputData
 	std::vector<double> features;
 	NNInputData(std::vector<double> f, int c) :CorrectDiagnosis(c), features(f){}
 	NNInputData();
+};
+
+struct ColorFeature
+{
+	
+	double *ExtractedFeatures;
+	ColorFeature(Mat *FMap);
+	ColorFeature();
 };
 
 class Resource

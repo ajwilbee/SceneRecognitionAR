@@ -8,16 +8,16 @@ class Features
 {
 private:
 	static const int NumImgDivisions = 4;
-	double **ExtractedFeatures;
+	double *ExtractedFeatures;
 	int numElements;
 	Mat *FeatureMap;
 public:
 	Features();
 	void Initialize(Mat *FMap, int numElem);
 	Features(Mat *FeatureMap, int numElem);
-	double** getExtractedFeatures();
+	double* getExtractedFeatures();
 	void setFeatureMap(Mat *FMap, int numElem);
-	double* subMeans(Mat src, double GistMeans[]);
+	double* subMeans(Mat *FMap, double GistMeans[]);
 	~Features();
 };
 

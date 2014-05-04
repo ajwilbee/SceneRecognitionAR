@@ -2,7 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/imgproc/imgproc.hpp"
-#include "Features.h"
+#include "Resource.h"
 using namespace cv;
 /*
 This class contains the color features for the gist model.
@@ -36,16 +36,16 @@ private:
 	
 public:
 
-	Features RG;
-	Features BY;
-	Features Intensity;
+	ColorFeature RG;
+	ColorFeature BY;
+	ColorFeature Intensity;
 
 	Color_Channel();
 	Color_Channel(Mat I);
 	void Initialize(Mat I);
-	void Make_FeatureMap(Mat *p1, Mat *p2, Mat *fMap, Features x);
+	void Make_FeatureMap(Mat *p1, Mat *p2, Mat *fMap, ColorFeature *x);
 	void CreateColorPlanes(); // uses the original image
-	Mat* MakePyramid(Mat I, Mat* dst); // will make an spatial pyramid of indicated depth using buildPyramid or somthing like it
+	void MakePyramid(Mat I, Mat* dst); // will make an spatial pyramid of indicated depth using buildPyramid or somthing like it
 	Mat getImage();
 	Mat Interpolate(Mat src, Mat dst);
 	void setImage(Mat I);

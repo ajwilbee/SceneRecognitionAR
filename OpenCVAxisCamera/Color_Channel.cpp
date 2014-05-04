@@ -17,31 +17,39 @@ void Color_Channel::Initialize(Mat I){
 	//RG first 
 	//BY
 	//I
+	
+	//ColorPlanes[0].copyTo(pyr1[0]);
+	//for (int x = 1; x < depth; x++){
+	//	pyrDown(pyr1[x - 1], pyr1[x], Size(pyr1[x - 1].cols / 2, pyr1[x - 1].rows / 2));
+
+	//}
 	MakePyramid(ColorPlanes[0], pyr1);
 	MakePyramid(ColorPlanes[1], pyr2);
-	Make_FeatureMap(pyr1, pyr2, FeatureMapsRG,RG);
+	Make_FeatureMap(pyr1, pyr2, FeatureMapsRG,&RG);
 	MakePyramid(ColorPlanes[2], pyr1);
 	MakePyramid(ColorPlanes[3], pyr2);
-	Make_FeatureMap(pyr1, pyr2, FeatureMapsBY,BY);
+	Make_FeatureMap(pyr1, pyr2, FeatureMapsBY,&BY);
 	MakePyramid(ColorPlanes[4], pyr1);
-	Make_FeatureMap(pyr1, pyr1, FeatureMapsI, Intensity);
+	Make_FeatureMap(pyr1, pyr1, FeatureMapsI, &Intensity);
 
-	delete[] pyr1;
-	delete[] pyr2;
+	for (int i = 0; i < depth; i++){
+		 pyr1[i].release();
+		 pyr2[i].release();
+
+	}
 }
 
 // 2-5,2-6,3-6,3-7,4-7,4-8 layer combinations, -1 to get 0 indexing
 //takes in as an argument the class variable for the feature map that it is to fill, fmap
-void Color_Channel::Make_FeatureMap(Mat *p1, Mat *p2, Mat *fMap, Features x){
+void Color_Channel::Make_FeatureMap(Mat *p1, Mat *p2, Mat *fMap, ColorFeature *x){
 	
 	Mat interpolated;
 	for (int i = 0; i < 6; i++){
 		Interpolate(p2[i], interpolated);
 		fMap[i] = abs(p1[i] - interpolated);
 	}
-	x = Features(fMap, NumFeatureMaps);
-	interpolated.deallocate();
-
+	x = &ColorFeature(fMap); 
+	interpolated.release();
 }
 void Color_Channel::CreateColorPlanes(){
 	Mat colors[3];
@@ -53,15 +61,14 @@ void Color_Channel::CreateColorPlanes(){
 	ColorPlanes[3] = colors[0] + colors[1] - 2 * (abs(colors[0] - colors[1])+ colors[2]);
 	ColorPlanes[4] = (colors[0] + colors[1] + colors[2])/3;
 	//dealocate seperatly?
-	delete[] colors;
+	//delete colors;
 }
-Mat* Color_Channel::MakePyramid(Mat I, Mat* dst){
+void Color_Channel::MakePyramid(Mat I, Mat* dst){
 	I.copyTo(dst[0]);
-	for (int x = 1; x <= depth; x++){
+	for (int x = 1; x < depth; x++){
 		pyrDown(dst[x - 1], dst[x], Size(dst[x - 1].cols / 2, dst[x - 1].rows / 2));
 
 	}
-	return dst;
 }
 Mat Color_Channel::getImage(){
 	return OriginalImage;
@@ -80,12 +87,12 @@ Color_Channel::~Color_Channel()
 {
 	OriginalImage.deallocate();
 //dealocate seperatly?
-	delete[] ColorPlanes;
-	delete[] FeatureMapsRG;
-	delete[] FeatureMapsBY;
-	delete[] FeatureMapsI;
+///	delete[] ColorPlanes;
+//	delete[] FeatureMapsRG;
+//	delete[] FeatureMapsBY;
+//	delete[] FeatureMapsI;
 
-	delete &RG;
-	delete &BY;
-	delete &Intensity;
+//	delete &RG;
+//	delete &BY;
+//	delete &Intensity;
 }
