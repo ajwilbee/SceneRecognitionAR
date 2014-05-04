@@ -85,6 +85,8 @@ void Color_Channel::setImage(Mat I){
 
 Color_Channel::~Color_Channel()
 {
+
+	// killing the original image here will ruin everything
 	//OriginalImage.deallocate();
 //dealocate seperatly?
 ///	delete[] ColorPlanes;
