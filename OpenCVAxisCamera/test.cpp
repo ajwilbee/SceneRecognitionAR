@@ -1,5 +1,10 @@
 #include "opencv/cv.h"
 #include <opencv2/core/core.hpp>
+#include <iostream>
+#include <fstream>
+#include <windows.h>
+#include <tchar.h>
+#include <stdio.h>
 #include "opencv/highgui.h"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "Gabor.h"
@@ -9,8 +14,7 @@
 #include "Resource.h"
 #include "GenAlg.h"
 #include "dataanalysis.h"
-#include <iostream>
-#include <fstream>
+
 #include "ap.h"
 #include "alglibinternal.h"
 #include "linalg.h"
@@ -34,7 +38,7 @@ using namespace cv;
 
 
 void createSobels();
-void CreateGistVector(Mat I);
+double* CreateGistVector(Mat I);
 std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
@@ -46,8 +50,102 @@ Mat horz = Mat(3, 3, CV_64FC1);
 
 int main(void)
 {
+	// can make this a function if sure that can pass the vector around without it breaking, try tommorrow if you want
+	// could also make it a loop if the directories are put into a string array.
+	vector<double*> AllImageFeatures;
+	double numberOfImagesInDirectory[4];
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hFind;
+
+	int counter = 0;
+	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+	while (hFind != INVALID_HANDLE_VALUE){
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+		cout << FindFileData.cFileName;
+		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+
+		double* p = CreateGistVector(inputIm);
+		AllImageFeatures.push_back(p);
+		counter++;
+		if (!FindNextFile(hFind, &FindFileData))
+		{
+			FindClose(hFind);
+			hFind = INVALID_HANDLE_VALUE;
+		}
+	}
+	numberOfImagesInDirectory[1] = counter;
+	counter = 0;
+	cout << "\n";
+	//
+	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+	while (hFind != INVALID_HANDLE_VALUE){
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+		cout << FindFileData.cFileName;
+		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+
+		double* p = CreateGistVector(inputIm);
+		AllImageFeatures.push_back(p);
+
+		if (!FindNextFile(hFind, &FindFileData))
+		{
+			FindClose(hFind);
+			hFind = INVALID_HANDLE_VALUE;
+		}
+	}
+	numberOfImagesInDirectory[2] = counter;
+	counter = 0;
+	cout << "\n";
+	//
+	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+	while (hFind != INVALID_HANDLE_VALUE){
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+		cout << FindFileData.cFileName;
+		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+
+		double* p = CreateGistVector(inputIm);
+		AllImageFeatures.push_back(p);
+
+		if (!FindNextFile(hFind, &FindFileData))
+		{
+			FindClose(hFind);
+			hFind = INVALID_HANDLE_VALUE;
+		}
+	}
+	numberOfImagesInDirectory[3] = counter;
+	counter = 0;
+	cout << "\n";
+//
+	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+	while (hFind != INVALID_HANDLE_VALUE){
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+		cout << FindFileData.cFileName;
+		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+		//imshow("filtered", inputIm);
+		//waitKey(0);
+		double* p = CreateGistVector(inputIm);
+		AllImageFeatures.push_back(p);
+
+		if (!FindNextFile(hFind, &FindFileData))
+		{
+			FindClose(hFind);
+			hFind = INVALID_HANDLE_VALUE;
+		}
+	}
+	numberOfImagesInDirectory[4] = counter;
+	counter = 0;
+
+
 	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
 	CreateGistVector(inputIm);
+	
 
 	int numIter = 100;
 	//this is the input data from the cancer study
@@ -186,7 +284,7 @@ std::vector<NNInputData> readExcelCSV(){
 }
 
 
-void CreateGistVector(Mat I){
+double* CreateGistVector(Mat I){
 	Mat copyI;
 	I.copyTo(copyI);
 	/*real_2d_array PCAarray; http://forum.alglib.net/viewtopic.php?f=2&t=60
@@ -225,6 +323,7 @@ void CreateGistVector(Mat I){
 		AllFeatures[counter] = CC.Intensity.ExtractedFeatures[i];
 		counter++;
 	}
+	return AllFeatures;
 }
 
 void createSobels(){
