@@ -147,16 +147,16 @@ int main(void)
 	
 	int iArrayHeight = AllImageFeatures.size();
 	int iArrayWidth = (64) * 4 + (96) * 3;
-	double createZeroMean[(64) * 4 + (96) * 3];
+	double createZeroMean[(64) * 4 + (96) * 3] = { 0.0 };
 	p = AllImageFeatures[0];
-	PCAarray.setlength(iArrayWidth,iArrayHeight);
+	PCAarray.setlength(iArrayHeight,iArrayWidth);//height is the number of points, width is the number of variables per point
 
 	for ( int i = 0; i < iArrayHeight; i++ )
 	{
 	   for ( int j = 0; j < iArrayWidth; j++ )
 	   {
 		   PCAarray(i, j) = AllImageFeatures[i][j];
-		   createZeroMean[j]++;
+		   createZeroMean[j] = createZeroMean[j] + AllImageFeatures[i][j];
 	   }
 	}
 	//find the offset to make it zero mean
@@ -174,8 +174,8 @@ int main(void)
 	//	}
 	//}
 
-	ae_int_t npoints = iArrayWidth;
-	ae_int_t nvars = iArrayHeight;
+	ae_int_t npoints = iArrayHeight;
+	ae_int_t nvars = iArrayWidth;
 	ae_int_t info;
 	double* tester;
 	double value=0;
@@ -185,7 +185,7 @@ int main(void)
 	real_2d_array v;// array[0..NVars - 1, 0..NVars - 1] matrix, whose columns store basis vectors. Wcpa, must keep only top 90percent based on sum of sigmas
 
 	pcabuildbasis( PCAarray, npoints, nvars,  info, s2, v);
-	double sum = 0;
+	double sum = s2[0];
 	tester = s2.getcontent();
 	for (int i = 0; i < s2.length(); i++){
 		value =value + tester[i];
@@ -203,9 +203,9 @@ int main(void)
 		jTop++;
 	}
 	//convert to matrix to do the multiplication to achieve the final feature set
-	
-	Mat WPCA = Mat::zeros(iArrayHeight, jTop, CV_32F);
-	for (int i = 0; i < iArrayHeight; i++)
+	jTop = 80;
+	Mat WPCA = Mat::zeros(iArrayWidth, jTop, CV_32F);
+	for (int i = 0; i < iArrayWidth; i++)
 	{
 		
 		for (int j = 0; j < jTop; j++)
@@ -224,7 +224,7 @@ int main(void)
 		}
 	}
 	
-	Mat FinalFeaturesMatrix = SourceData.t()*WPCA;
+	Mat FinalFeaturesMatrix = SourceData*WPCA;
 	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
 	CreateGistVector(inputIm);
 	
