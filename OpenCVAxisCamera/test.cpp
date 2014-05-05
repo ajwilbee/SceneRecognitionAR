@@ -54,9 +54,10 @@ int main(void)
 	// could also make it a loop if the directories are put into a string array.
 	vector<double*> AllImageFeatures;
 	double numberOfImagesInDirectory[4];
+
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
-
+	double* p;
 	int counter = 0;
 	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
 	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
@@ -66,7 +67,8 @@ int main(void)
 		cout << FindFileData.cFileName;
 		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 
-		double* p = CreateGistVector(inputIm);
+		p = CreateGistVector(inputIm);
+		//double x = p[10];
 		AllImageFeatures.push_back(p);
 		counter++;
 		if (!FindNextFile(hFind, &FindFileData))
@@ -75,74 +77,154 @@ int main(void)
 			hFind = INVALID_HANDLE_VALUE;
 		}
 	}
-	numberOfImagesInDirectory[1] = counter;
-	counter = 0;
-	cout << "\n";
-	//
-	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
-	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
-	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
-		cout << FindFileData.cFileName;
-		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
-
-		double* p = CreateGistVector(inputIm);
-		AllImageFeatures.push_back(p);
-
-		if (!FindNextFile(hFind, &FindFileData))
-		{
-			FindClose(hFind);
-			hFind = INVALID_HANDLE_VALUE;
-		}
-	}
-	numberOfImagesInDirectory[2] = counter;
-	counter = 0;
-	cout << "\n";
-	//
-	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
-	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
-	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
-		cout << FindFileData.cFileName;
-		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
-
-		double* p = CreateGistVector(inputIm);
-		AllImageFeatures.push_back(p);
-
-		if (!FindNextFile(hFind, &FindFileData))
-		{
-			FindClose(hFind);
-			hFind = INVALID_HANDLE_VALUE;
-		}
-	}
-	numberOfImagesInDirectory[3] = counter;
-	counter = 0;
-	cout << "\n";
+//	numberOfImagesInDirectory[1] = counter;
+//	counter = 0;
+//	cout << "\n";
+//	//
+//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+//	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+//	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+//	while (hFind != INVALID_HANDLE_VALUE){
+//		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+//		cout << FindFileData.cFileName;
+//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 //
-	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
-	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
-	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
-		cout << FindFileData.cFileName;
-		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
-		//imshow("filtered", inputIm);
-		//waitKey(0);
-		double* p = CreateGistVector(inputIm);
-		AllImageFeatures.push_back(p);
+//		p = CreateGistVector(inputIm);
+//		AllImageFeatures.push_back(p);
+//
+//		if (!FindNextFile(hFind, &FindFileData))
+//		{
+//			FindClose(hFind);
+//			hFind = INVALID_HANDLE_VALUE;
+//		}
+//	}
+//	numberOfImagesInDirectory[2] = counter;
+//	counter = 0;
+//	cout << "\n";
+//	//
+//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+//	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+//	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+//	while (hFind != INVALID_HANDLE_VALUE){
+//		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+//		cout << FindFileData.cFileName;
+//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+//
+//		p = CreateGistVector(inputIm);
+//		AllImageFeatures.push_back(p);
+//
+//		if (!FindNextFile(hFind, &FindFileData))
+//		{
+//			FindClose(hFind);
+//			hFind = INVALID_HANDLE_VALUE;
+//		}
+//	}
+//	numberOfImagesInDirectory[3] = counter;
+//	counter = 0;
+//	cout << "\n";
+////
+//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+//	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+//	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+//	while (hFind != INVALID_HANDLE_VALUE){
+//		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+//		cout << FindFileData.cFileName;
+//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+//		//imshow("filtered", inputIm);
+//		//waitKey(0);
+//		p = CreateGistVector(inputIm);
+//		AllImageFeatures.push_back(p);
+//
+//		if (!FindNextFile(hFind, &FindFileData))
+//		{
+//			FindClose(hFind);
+//			hFind = INVALID_HANDLE_VALUE;
+//		}
+//	}
+//	numberOfImagesInDirectory[4] = counter;
+//	counter = 0;
+	real_2d_array PCAarray; http://forum.alglib.net/viewtopic.php?f=2&t=60
+	
+	int iArrayHeight = AllImageFeatures.size();
+	int iArrayWidth = (64) * 4 + (96) * 3;
+	double createZeroMean[(64) * 4 + (96) * 3];
+	p = AllImageFeatures[0];
+	PCAarray.setlength(iArrayWidth,iArrayHeight);
 
-		if (!FindNextFile(hFind, &FindFileData))
+	for ( int i = 0; i < iArrayHeight; i++ )
+	{
+	   for ( int j = 0; j < iArrayWidth; j++ )
+	   {
+		   PCAarray(i, j) = AllImageFeatures[i][j];
+		   createZeroMean[j]++;
+	   }
+	}
+	//find the offset to make it zero mean
+	for (int j = 0; j < iArrayWidth; j++){
+
+		createZeroMean[j] = createZeroMean[j] / iArrayHeight;
+
+	}
+	// make the array zero mean
+	//for (int i = 0; i < iArrayHeight; i++)
+	//{
+	//	for (int j = 0; j < iArrayWidth; j++)
+	//	{
+	//		PCAarray(i, j) = PCAarray(i, j) - createZeroMean[j];
+	//	}
+	//}
+
+	ae_int_t npoints = iArrayWidth;
+	ae_int_t nvars = iArrayHeight;
+	ae_int_t info;
+	double* tester;
+	double value=0;
+	double percentInfo = 0;
+	double AcceptablePercent = 0.95;
+	real_1d_array s2;//array[0..NVars-1]. variance values corresponding to basis vectors. sigmas (eigne values)
+	real_2d_array v;// array[0..NVars - 1, 0..NVars - 1] matrix, whose columns store basis vectors. Wcpa, must keep only top 90percent based on sum of sigmas
+
+	pcabuildbasis( PCAarray, npoints, nvars,  info, s2, v);
+	double sum = 0;
+	tester = s2.getcontent();
+	for (int i = 0; i < s2.length(); i++){
+		value =value + tester[i];
+	}
+	int iTop = 0;
+	while ((percentInfo / value) < AcceptablePercent){
+		percentInfo = percentInfo + tester[iTop];
+		iTop++;
+	}
+
+	int jTop = 0;
+	double Val = 2;
+	while (tester[jTop] > 1){
+		Val = tester[jTop];
+		jTop++;
+	}
+	//convert to matrix to do the multiplication to achieve the final feature set
+	
+	Mat WPCA = Mat::zeros(iArrayHeight, jTop, CV_32F);
+	for (int i = 0; i < iArrayHeight; i++)
+	{
+		
+		for (int j = 0; j < jTop; j++)
 		{
-			FindClose(hFind);
-			hFind = INVALID_HANDLE_VALUE;
+			WPCA.at<float>(i,j) = (v(i, j));
+		}
+		//each element in WPCA is a row of the WPCA Matrix
+	}
+	Mat SourceData = Mat::zeros(iArrayHeight, iArrayWidth, CV_32F);
+	for (int i = 0; i < iArrayHeight; i++)
+	{
+		for (int j = 0; j < iArrayWidth; j++)
+		{
+			SourceData.at<float>(i,j) = AllImageFeatures[i][j]-createZeroMean[j];
+			
 		}
 	}
-	numberOfImagesInDirectory[4] = counter;
-	counter = 0;
-
-
+	
+	Mat FinalFeaturesMatrix = SourceData.t()*WPCA;
 	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
 	CreateGistVector(inputIm);
 	
