@@ -61,16 +61,18 @@ struct NNInputData
 
 struct ColorFeature
 {
-	
-	double *ExtractedFeatures;
+	int NumImgDivisions;
+	int numElem;
+	double ExtractedFeatures[96];
 	ColorFeature(Mat *FMap);
 	ColorFeature();
 };
 
 struct OrientationFeature
 {
-
-	double *ExtractedFeatures;
+	int NumImgDivisions ;
+	int numElem;
+	double ExtractedFeatures[64];
 	OrientationFeature(Mat *FMap);
 	OrientationFeature();
 };

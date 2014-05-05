@@ -19,26 +19,28 @@ void Orienation_Channel::Initialize(Mat I){
 	int scale = .25;
 	int sigma = 2;
 	Mat im;
-	Mat out;
 	
 
 	for (int i = 0; i < depth; i++){
 		im = pyr1[i];
-		out = FeatureMaps0[i];
-		filter2D(im, out, im.depth(), horz);
+		filter2D(im, FeatureMaps0[i], im.depth(), horz);
 	}
+	F0 = OrientationFeature(FeatureMaps0);
 	for (int i = 0; i < depth; i++){
 		im = pyr1[i];
 		filter2D(im, FeatureMaps45[i], im.depth(), d45);
 	}
+	F45 = OrientationFeature(FeatureMaps45);
 	for (int i = 0; i < depth; i++){
 		im = pyr1[i];
 		filter2D(im, FeatureMaps90[i], im.depth(), vert);
 	}
+	F90 = OrientationFeature(FeatureMaps90);
 	for (int i = 0; i < depth; i++){
 		im = pyr1[i];
 		filter2D(im, FeatureMaps135[i], im.depth(), d135);
 	}
+	F135 = OrientationFeature(FeatureMaps135);
 	//Make_FeatureMap(pyr1, FeatureMaps0, &horz,&F0);
 	//Make_FeatureMap(pyr1, FeatureMaps45, &d45, &F45);
 	//Make_FeatureMap(pyr1, FeatureMaps90, &vert, &F90);

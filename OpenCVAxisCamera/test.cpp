@@ -189,45 +189,42 @@ std::vector<NNInputData> readExcelCSV(){
 void CreateGistVector(Mat I){
 	Mat copyI;
 	I.copyTo(copyI);
-	/*real_2d_array PCAarray;
+	/*real_2d_array PCAarray; http://forum.alglib.net/viewtopic.php?f=2&t=60
 	PCAarray;
 	pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v);*/
 	Orienation_Channel OC = Orienation_Channel(I);
 	Color_Channel CC = Color_Channel(copyI);
 	
-	////make one solid GistVector
-	//double** GistVector = ;
-	//int range = 4;
-	//for (int i = 0; i < range; i++){
-	//	GistVector[i] = *OC.F0.getExtractedFeatures;
-	//}
-
-	////int offset = range;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &OC.F45.getExtractedFeatures[i];
-	////}
-	////
-	////offset = offset + range;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &OC.F90.getExtractedFeatures[i];
-	////}
-	////offset = offset + range;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &OC.F135.getExtractedFeatures[i];
-	////}
-	////offset = offset + range;
-	////int range = 6;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &CC.RG.getExtractedFeatures[i];
-	////}
-	////offset = offset + range;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &CC.BY.getExtractedFeatures[i];
-	////}
-	////offset = offset + range;
-	////for (int i = 0; i < range; i++){
-	////	GistVector[offset + i] = &CC.Intensity.getExtractedFeatures[i];
-	////}
+	double AllFeatures[(64) * 4 + (96) * 3];
+	int counter = 0;
+	for (int i = 0; i < 64; i++){
+		AllFeatures[counter] = OC.F0.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 64; i++){
+		AllFeatures[counter] = OC.F45.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 64; i++){
+		AllFeatures[counter] = OC.F90.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 64; i++){
+		AllFeatures[counter] = OC.F135.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 96; i++){
+		AllFeatures[counter] = CC.BY.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 96; i++){
+		AllFeatures[counter] = CC.RG.ExtractedFeatures[i];
+		counter++;
+	}
+	for (int i = 0; i < 96; i++){
+		AllFeatures[counter] = CC.Intensity.ExtractedFeatures[i];
+		counter++;
+	}
 }
 
 void createSobels(){

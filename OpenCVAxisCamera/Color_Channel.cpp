@@ -10,7 +10,7 @@ Color_Channel::Color_Channel(Mat I){
 }
 
 void Color_Channel::Initialize(Mat I){
-	OriginalImage = I;
+	I.copyTo(OriginalImage);
 	CreateColorPlanes();
 	Mat pyr1[depth];
 	Mat pyr2[depth];
@@ -25,13 +25,25 @@ void Color_Channel::Initialize(Mat I){
 	//}
 	MakePyramid(ColorPlanes[0], pyr1);
 	MakePyramid(ColorPlanes[1], pyr2);
-	Make_FeatureMap(pyr1, pyr2, FeatureMapsRG,&RG);
+	Mat interpolated;
+	for (int i = 0; i < 6; i++){
+		Interpolate(pyr2[i], interpolated);
+		FeatureMapsRG[i] = abs(pyr1[i] - interpolated);
+	}
+	RG = ColorFeature(FeatureMapsRG);
 	MakePyramid(ColorPlanes[2], pyr1);
 	MakePyramid(ColorPlanes[3], pyr2);
-	Make_FeatureMap(pyr1, pyr2, FeatureMapsBY,&BY);
+	for (int i = 0; i < 6; i++){
+		Interpolate(pyr2[i], interpolated);
+		FeatureMapsBY[i] = abs(pyr1[i] - interpolated);
+	}
+	BY = ColorFeature(FeatureMapsBY);
 	MakePyramid(ColorPlanes[4], pyr1);
-	Make_FeatureMap(pyr1, pyr1, FeatureMapsI, &Intensity);
-
+	for (int i = 0; i < 6; i++){
+		Interpolate(pyr2[i], interpolated);
+		FeatureMapsI[i] = abs(pyr1[i] - interpolated);
+	}
+	Intensity = ColorFeature(FeatureMapsI);
 	for (int i = 0; i < depth; i++){
 		 pyr1[i].release();
 		 pyr2[i].release();
@@ -49,7 +61,7 @@ void Color_Channel::Make_FeatureMap(Mat *p1, Mat *p2, Mat *fMap, ColorFeature *x
 		fMap[i] = abs(p1[i] - interpolated);
 	}
 	x = &ColorFeature(fMap); 
-	interpolated.release();
+	//interpolated.release();
 }
 void Color_Channel::CreateColorPlanes(){
 	Mat colors[3];

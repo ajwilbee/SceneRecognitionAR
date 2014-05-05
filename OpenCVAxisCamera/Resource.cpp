@@ -33,10 +33,9 @@ SNeuronLayer::SNeuronLayer(int NumNeurons, int NumInputsPerNeuron) : m_NumNeuron
 }
 
 ColorFeature::ColorFeature(Mat *FMap){
-	static const int NumImgDivisions = 4;
-	static const int numElem = 6;
-	ExtractedFeatures = new double[NumImgDivisions*NumImgDivisions * numElem];
-	double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
+	NumImgDivisions = 4;
+	numElem = 6;
+	//double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
 	Size s = FMap[0].size();
 	Mat Image;
 	int stepSizeRow = s.width / NumImgDivisions;
@@ -66,17 +65,15 @@ ColorFeature::ColorFeature(Mat *FMap){
 			}
 
 		}
-		Image.release();
 	}
 }
 
 ColorFeature::ColorFeature(){}
 
 OrientationFeature::OrientationFeature(Mat *FMap){
-	static const int NumImgDivisions = 4;
-	static const int numElem = 4;
-	ExtractedFeatures = new double[NumImgDivisions*NumImgDivisions * numElem];
-	double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
+	NumImgDivisions = 4;
+	numElem = 4;
+	//double ExtractedFeatures[NumImgDivisions*NumImgDivisions * numElem]; // definate array needs no delete
 	Size s = FMap[0].size();
 	Mat Image;
 	int stepSizeRow = s.width / NumImgDivisions;
@@ -106,7 +103,6 @@ OrientationFeature::OrientationFeature(Mat *FMap){
 			}
 
 		}
-		Image.release();
 	}
 
 }
