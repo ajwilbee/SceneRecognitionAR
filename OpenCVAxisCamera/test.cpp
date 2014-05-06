@@ -38,7 +38,7 @@ using namespace cv;
 
 
 void createSobels();
-double* CreateGistVector(Mat I);
+void CreateGistVector(Mat I, double *Allfeatures);
 std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
@@ -56,8 +56,10 @@ int main(void)
 	double numberOfImagesInDirectory[4];
 
 	WIN32_FIND_DATA FindFileData;
+
 	HANDLE hFind;
-	double* p;
+	ofstream featurewrite;
+	featurewrite.open("p.csv", ios::app);
 	int counter = 0;
 	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
 	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
@@ -66,8 +68,17 @@ int main(void)
 		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
 		cout << FindFileData.cFileName;
 		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+		double *p = new double[544];
+		CreateGistVector(inputIm,p);
 
-		p = CreateGistVector(inputIm);
+		featurewrite << "\n";
+		for (int i = 0; i < 544; i++){
+			featurewrite << p[i];
+			featurewrite << ",";
+		}
+
+		
+
 		//double x = p[10];
 		AllImageFeatures.push_back(p);
 		counter++;
@@ -77,6 +88,8 @@ int main(void)
 			hFind = INVALID_HANDLE_VALUE;
 		}
 	}
+	featurewrite.close();
+
 	numberOfImagesInDirectory[0] = counter;
 		counter = 0;
 		cout << "\n";
@@ -84,12 +97,16 @@ int main(void)
 		path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
 		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
 		hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+		
 		while (hFind != INVALID_HANDLE_VALUE){
 			path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
 			cout << FindFileData.cFileName;
 			Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
-	
-			p = CreateGistVector(inputIm);
+			double *p = new double[544];
+			CreateGistVector(inputIm, p);
+			
+			
+			
 			AllImageFeatures.push_back(p);
 	
 			if (!FindNextFile(hFind, &FindFileData))
@@ -98,8 +115,10 @@ int main(void)
 				hFind = INVALID_HANDLE_VALUE;
 			}
 		}
+
+		
 		numberOfImagesInDirectory[1] = counter;
-	//	counter = 0;
+		counter = 0;
 	//	cout << "\n";
 	//	//
 	//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
@@ -110,7 +129,8 @@ int main(void)
 	//		cout << FindFileData.cFileName;
 	//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 	//
-	//		p = CreateGistVector(inputIm);
+	//		double *p = new double[544];
+	//		CreateGistVector(inputIm, p);
 	//		AllImageFeatures.push_back(p);
 	//
 	//		if (!FindNextFile(hFind, &FindFileData))
@@ -132,7 +152,8 @@ int main(void)
 	//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 	//		//imshow("filtered", inputIm);
 	//		//waitKey(0);
-	//		p = CreateGistVector(inputIm);
+	//		double *p = new double[544];
+	//		CreateGistVector(inputIm, p);
 	//		AllImageFeatures.push_back(p);
 	//
 	//		if (!FindNextFile(hFind, &FindFileData))
@@ -148,17 +169,22 @@ int main(void)
 	int iArrayHeight = AllImageFeatures.size();
 	int iArrayWidth = (64) * 4 + (96) * 3;
 	double createZeroMean[(64) * 4 + (96) * 3] = { 0.0 };
-	p = AllImageFeatures[0];
+	//p = AllImageFeatures[0];
 	PCAarray.setlength(iArrayHeight, iArrayWidth);//height is the number of points, width is the number of variables per point
-
+	ofstream myfile;
+	myfile.open("example.csv");
 	for (int i = 0; i < iArrayHeight; i++)
 	{
 		for (int j = 0; j < iArrayWidth; j++)
 		{
 			PCAarray(i, j) = AllImageFeatures[i][j];
+			myfile << AllImageFeatures[i][j];
+			myfile << ",";
 			createZeroMean[j] = createZeroMean[j] + AllImageFeatures[i][j];
 		}
+		myfile << "\n";
 	}
+	myfile.close();
 	//find the offset to make it zero mean
 	for (int j = 0; j < iArrayWidth; j++){
 
@@ -203,7 +229,10 @@ int main(void)
 		jTop++;
 	}
 	//convert to matrix to do the multiplication to achieve the final feature set
-	jTop = 80;
+	ofstream WPCAVals;
+	WPCAVals.open("WPCAVals.csv");
+
+
 	Mat WPCA = Mat::zeros(iArrayWidth, jTop, CV_32F);
 	for (int i = 0; i < iArrayWidth; i++)
 	{
@@ -211,9 +240,13 @@ int main(void)
 		for (int j = 0; j < jTop; j++)
 		{
 			WPCA.at<float>(i, j) = (v(i, j));
+			WPCAVals << (v(i, j));
+			WPCAVals << ",";
 		}
+		WPCAVals << "\n";
 		//each element in WPCA is a row of the WPCA Matrix
 	}
+	WPCAVals.close();
 	Mat SourceData = Mat::zeros(iArrayHeight, iArrayWidth, CV_32F);
 	for (int i = 0; i < iArrayHeight; i++)
 	{
@@ -243,9 +276,21 @@ int main(void)
 		}
 	}
 
-	Mat inputIm = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
-	CreateGistVector(inputIm);
 	int numIter = 100;
+	double inputsize = ReadyForNN[0].features.size();
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
+	GenAlg* MyEarth = new GenAlg(10, .05, .5, myNN, ReadyForNN);
+	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	for (int i = 0; i < numIter; i++){
+		MyEarth->Epoch(currentpopulation);
+		std::vector<SGenome> temp = MyEarth->GetChromos();
+		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+		cout << MyEarth->BestFitness() / ReadyForNN.size();
+		cout << "\n";
+	}
+
+	
+	
 	//this is the input data from the cancer study
 	/*std::vector<NNInputData> inData = readExcelCSV();
 	double inputsize = inData[0].features.size();
@@ -382,7 +427,7 @@ std::vector<NNInputData> readExcelCSV(){
 }
 
 
-double* CreateGistVector(Mat I){
+void CreateGistVector(Mat I, double *AllFeatures){
 	Mat copyI;
 	I.copyTo(copyI);
 	/*real_2d_array PCAarray; http://forum.alglib.net/viewtopic.php?f=2&t=60
@@ -391,7 +436,7 @@ double* CreateGistVector(Mat I){
 	Orienation_Channel OC = Orienation_Channel(I);
 	Color_Channel CC = Color_Channel(copyI);
 	
-	double AllFeatures[(64) * 4 + (96) * 3];
+	//double AllFeatures[(64) * 4 + (96) * 3];
 	int counter = 0;
 	for (int i = 0; i < 64; i++){
 		AllFeatures[counter] = OC.F0.ExtractedFeatures[i];
@@ -421,7 +466,17 @@ double* CreateGistVector(Mat I){
 		AllFeatures[counter] = CC.Intensity.ExtractedFeatures[i];
 		counter++;
 	}
-	return AllFeatures;
+
+	ofstream featurewrite;
+	featurewrite.open("AllFeatures.csv", ios::app);
+		featurewrite << "\n";
+	for (int i = 0; i < 544; i++){
+		featurewrite << AllFeatures[i];
+		featurewrite << ",";
+	}
+
+	featurewrite.close();
+	//return AllFeatures;
 }
 
 void createSobels(){
