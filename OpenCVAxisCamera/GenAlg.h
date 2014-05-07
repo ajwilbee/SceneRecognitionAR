@@ -62,7 +62,7 @@ private:
 	std::vector<SGenome> &vecPop);
 
 	void CalculateBestWorstAvTot();
-	int Fitness(SGenome gene, int index ); 
+	int Fitness(SGenome &gene, int index ); 
 	int FitnessDiversity(SGenome gene, int index);
 	void  Reset();
 
@@ -89,6 +89,7 @@ public:
 	double  AverageFitness()const{ return m_dTotalFitness / m_iPopSize; }
 	double  fRand(double fMin, double fMax);
 	double  BestFitness()const{ return m_dBestFitness; }
+	void writeBestWeights();
 
 	~GenAlg();
 };

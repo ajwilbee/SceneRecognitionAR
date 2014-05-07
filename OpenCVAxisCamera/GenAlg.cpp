@@ -1,6 +1,9 @@
 #include "GenAlg.h"
 
 #include <algorithm>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 
 
@@ -30,7 +33,7 @@ void  GenAlg::Crossover(const std::vector<double> &mum,
 							  std::vector<double> &baby1,
 							  std::vector<double> &baby2)
 {
-	int modValue = 100;
+	int modValue = 1;
 	double temp;
 	for (int i = 0; i < mum.size(); i++){
 		temp = fRand(0,1);
@@ -145,41 +148,54 @@ int GenAlg::interpertOutput(std::vector<double> output){
 
 //calls the NN recieves the output and determines the fitness of the gene
 // may wish to abstract out the NN call
-int GenAlg::Fitness(SGenome gene, int index){
+int GenAlg::Fitness(SGenome &gene, int index){
 	//set the neural network with proper weights
 	m_NN->PutWeights(gene.vecWeights);
-	int fitnesscount = 0;
+	double correct0 = 0;
+	double correct1 = 0;
+	double expected = 62.0; // make variable later
+
 	// run through all of the inputs and checking the output to judge fitness
 	fitnessC.open("Classifications.csv",std::ios::app);
 	for (int i = 0; i < m_Inputs.size(); i++){
 		m_NN_Classification = interpertOutput(m_NN->Update(m_Inputs[i].features));
 		if (m_NN_Classification == m_Inputs[i].CorrectDiagnosis){
-			fitnesscount++;
+			if (m_NN_Classification == 0){
+				correct0++;
+			}
+			if (m_NN_Classification == 1){
+				correct1++;
+			}
 		}
 		
 		fitnessC << m_NN_Classification;
 		fitnessC << ",";
 
 	}
+
+	correct0 /= expected;
+	correct1 /= expected;
+	gene.dFitness = correct0*correct1;
+	
 	fitnessC << "\n";
 	fitnessC.close();
 
-	gene.dFitness = fitnesscount;
-	if (fitnesscount >= m_dBestFitness){
+	
+	if (gene.dFitness >= m_dBestFitness){
 		m_iFittestGenome = index;
-		m_dBestFitness = fitnesscount;
+		m_dBestFitness = gene.dFitness;
 	}
 
-	if (fitnesscount <= m_dWorstFitness){
+	if (gene.dFitness <= m_dWorstFitness){
 		m_iWorstGenome = index;
-		m_dWorstFitness = fitnesscount;
+		m_dWorstFitness = gene.dFitness;
 	}
 	
 	fitnessC.open("Fitness.csv", std::ios::app);
-	fitnessC << fitnesscount;
+	fitnessC << gene.dFitness;
 	fitnessC << ",";
 	fitnessC.close();
-	return fitnesscount;
+	return gene.dFitness;
 }
 
 int GenAlg::FitnessDiversity(SGenome gene, int index){
@@ -222,10 +238,26 @@ int GenAlg::FitnessDiversity(SGenome gene, int index){
 
 std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 {
-	int tempTotalFitness = 0;
+
+	ofstream myfile;
+	myfile.open("GENE.csv", ios::app);
+
+	double tempTotalFitness = 0;
 	for (int i = 0; i < old_pop.size(); i++){
 		tempTotalFitness += Fitness(m_vecPop[i], i);
 	}
+
+	for (int i = 0; i < m_vecPop.size(); i++)
+	{
+		myfile << m_vecPop[i].dFitness << ",";
+		for (int j = 0; j< m_vecPop[i].vecWeights.size(); j++){
+			myfile << m_vecPop[i].vecWeights[j] << ",";
+		}
+		myfile << "\n";
+	}
+	
+
+
 	fitnessC.open("Fitness.csv", std::ios::app);
 	fitnessC << "\n";
 	fitnessC.close();
@@ -240,21 +272,29 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 
 	std::vector <SGenome> mom;
 	std::vector <SGenome> dad;
-	int numBest = 10;
-	int numBestCopies = 2;
-	int Bestcount = 5;
-	for (int i = 0; i < Bestcount; i++){
-		mom.push_back(m_vecPop[m_iFittestGenome]);
-		dad.push_back(m_vecPop[m_iFittestGenome]);
-	}
-	GrabNBest(10,2,mom);
-	GrabNBest(10,2,dad);
+	int numBest = 5;
+	int numBestCopies = 1;
+	int Bestcount = 0;
+
+	
+	//for (int i = 0; i < Bestcount; i++){
+	//	mom.push_back(m_vecPop[m_iFittestGenome]);
+	//	dad.push_back(m_vecPop[m_iFittestGenome]);
+	//}
+	GrabNBest(numBest, numBestCopies, mom);
+	GrabNBest(numBest, numBestCopies, dad);
+
+
 	mom.push_back(m_vecPop[m_iWorstGenome]);
 	dad.push_back(m_vecPop[m_iWorstGenome]);
 	
-	int filler = m_iPopSize/2 - Bestcount - numBest*numBestCopies-1; // the -1 accounts for the worst one that is kept in the population
+
+	std::sort(m_vecPop.begin(), m_vecPop.end());
+	int filler = m_iPopSize / 2 - numBest*numBestCopies-1; // the -1 accounts for the worst one that is kept in the population
 
 	for (int i = 0; i < filler; i++){
+		//int t1 = GetChromoRoulette()
+		//int t1 = GetChromoRoulette()
 
 		mom.push_back(GetChromoRoulette());
 		dad.push_back(GetChromoRoulette());
@@ -271,6 +311,8 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 	m_vecPop.push_back(BestGene);
 	for (int i = 0; i < mom.size(); i++){
 		Crossover(mom[i].vecWeights, dad[i].vecWeights, baby1, baby2);
+
+
 		Mutate(baby1);
 		Mutate(baby2);
 		m_vecPop.push_back(SGenome(baby1, 0));
@@ -283,9 +325,25 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 	mom.clear();
 	dad.clear();
 
-	
+
+
+
+	//myfile << "\n";
+	myfile.close();
+
 	return m_vecPop;
 }
+
+void GenAlg::writeBestWeights(){
+	fitnessC.open("BestNNWeights.csv");
+	for (int i = 0; i < m_vecPop[m_iFittestGenome].vecWeights.size(); i++){
+		fitnessC << m_vecPop[m_iFittestGenome].vecWeights[i];
+		fitnessC << ",";
+	}
+
+
+}
+
 
 GenAlg::~GenAlg()
 {
