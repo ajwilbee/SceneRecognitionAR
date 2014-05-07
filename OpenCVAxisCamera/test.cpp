@@ -106,6 +106,8 @@ int main(void)
 
 	// now make the NN and process a single image
 	//TrainNN();
+
+	return 0;
 }
 
 
