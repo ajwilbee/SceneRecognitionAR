@@ -51,6 +51,8 @@ Mat horz = Mat(3, 3, CV_64FC1);
 
 int main(void)
 {
+
+	// get the NN best weights
 	ifstream file("BestNNWeights.csv");
 	string value;
 	std::vector <double>  vecWeights;
@@ -62,6 +64,47 @@ int main(void)
 		vecWeights.push_back(tempdouble);
 		cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
 	}
+	file.close();
+	
+	//make the zero means vector
+	file.open("ZeroMeanValues.csv");
+	std::vector <double>  ZeroMean;
+	tempdouble = 0.0;
+	while (file.good())
+	{
+		getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
+		tempdouble = strtod(value.c_str(), NULL);
+		ZeroMean.push_back(tempdouble);
+		cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
+	}
+	// make WPCA width and height
+	int iArrayWidth;
+	int jTop;
+	file.open("WPCARowandColumn.csv");
+	tempdouble = 0.0;
+	getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
+	iArrayWidth = atoi(value.c_str());
+	getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
+	jTop = atoi(value.c_str());
+
+	//make WPCA
+	Mat WPCA = Mat::zeros(iArrayWidth, jTop, CV_32F);
+	file.open("WPCAVals.csv");
+	for (int i = 0; i < iArrayWidth; i++)
+	{
+
+		for (int j = 0; j < jTop; j++)
+		{
+			getline(file, value, ',');
+			tempdouble = strtod(value.c_str(), NULL);
+			WPCA.at<float>(i, j) = tempdouble;
+			
+		}
+
+		//each element in WPCA is a row of the WPCA Matrix
+	}
+
+	// now make the NN and process a single image
 	//TrainNN();
 }
 
@@ -208,6 +251,12 @@ void TrainNN(){
 	}
 	//convert to matrix to do the multiplication to achieve the final feature set
 	ofstream WPCAVals;
+	WPCAVals.open("WPCARowandColumn.csv");
+	WPCAVals << iArrayWidth;
+	WPCAVals << ",";
+	WPCAVals << jTop;
+	WPCAVals.close();
+
 	WPCAVals.open("WPCAVals.csv");
 
 
@@ -452,3 +501,135 @@ void createSobels(){
 
 
 }
+
+
+//	cout << "\n";
+//	//
+//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+//	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+//	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+//	while (hFind != INVALID_HANDLE_VALUE){
+//		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+//		cout << FindFileData.cFileName;
+//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+//
+//		double *p = new double[544];
+//		CreateGistVector(inputIm, p);
+//		AllImageFeatures.push_back(p);
+//
+//		if (!FindNextFile(hFind, &FindFileData))
+//		{
+//			FindClose(hFind);
+//			hFind = INVALID_HANDLE_VALUE;
+//		}
+//	}
+//	numberOfImagesInDirectory[2] = counter;
+//	counter = 0;
+//	cout << "\n";
+////
+//	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+//	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+//	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
+//	while (hFind != INVALID_HANDLE_VALUE){
+//		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\livingroom_indoor_256x256_static\\";
+//		cout << FindFileData.cFileName;
+//		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+//		//imshow("filtered", inputIm);
+//		//waitKey(0);
+//		double *p = new double[544];
+//		CreateGistVector(inputIm, p);
+//		AllImageFeatures.push_back(p);
+//
+//		if (!FindNextFile(hFind, &FindFileData))
+//		{
+//			FindClose(hFind);
+//			hFind = INVALID_HANDLE_VALUE;
+//		}
+//	}
+//	numberOfImagesInDirectory[3] = counter;
+//	counter = 0;
+
+
+
+//this is the input data from the cancer study
+/*std::vector<NNInputData> inData = readExcelCSV();
+double inputsize = inData[0].features.size();
+FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
+GenAlg* MyEarth = new GenAlg(10, .05,.5, myNN, inData);
+std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+for (int i = 0; i < numIter; i++){
+MyEarth->Epoch(currentpopulation);
+std::vector<SGenome> temp = MyEarth->GetChromos();
+std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+cout << MyEarth->BestFitness()/inData.size();
+cout << "\n";
+}*/
+
+
+// image processing testing
+
+//VideoCapture videoCapture("http://axis2.student.rit.edu/mjpg/video.mjpg"); //http://axis1.student.rit.edu/mjpg/video.mjpg
+//cvWaitKey(5000);
+
+//if (!videoCapture.isOpened()){
+
+//	int temp = 1;
+//}
+//Mat img;
+//Mat hsv;
+
+//if (!inputIm.data)                              // Check for invalid input
+//{
+//	cout << "Could not open or find the image" << std::endl;
+//	return -1;
+//}
+//namedWindow("RAW", 1);
+//imshow("RAW", inputIm);
+//
+//createSobels();
+//Mat output;
+//
+//filter2D(inputIm, output, inputIm.depth(), d45);
+//imshow("filtered", output);
+//waitKey(0);
+
+//while (waitKey(10)!='ESC')
+//{
+//	videoCapture >> img;
+//	
+//	bool temp =  img.empty();
+//	Mat output;//CV_32FC1
+//	cvtColor(img, img, CV_RGB2GRAY);
+//	img.copyTo(output);
+//	Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
+//	Mat AllOnes = Mat::ones(3, 3, img.type());
+//	Mat onemore = Mat(img.size(), test.getFilter().type());
+//	img.copyTo(onemore);
+//	Mat gbfilter = test.getFilter();
+//	pyrDown(gbfilter, gbfilter);
+//	pyrDown(gbfilter, gbfilter);
+
+//	filter2D(onemore / 255, output, img.depth(), gbfilter);
+//	Mat looking = test.getFilter();
+//	double t = looking.at<double>(35, 35);
+//	//normalize(output, output);
+//	output = output/30;
+//	output = output *255;
+//	
+//	Mat done = Mat(img.size(), img.type());
+//	output.copyTo(done);
+//	imshow("RAW", img);
+//	imshow("Filter", gbfilter);
+//	imshow("output", done);
+
+
+//garbor testing
+//CvGabor temp1 = CvGabor(0, .25, 2);
+//IplImage ipl_img = img.operator IplImage();
+//IplImage *filtered = &filter.operator IplImage();
+//temp1.conv_img(&ipl_img, filtered, 2);
+//Mat cvmat(filtered);
+
+
+//imshow("HSV", cvmat);
+//}
