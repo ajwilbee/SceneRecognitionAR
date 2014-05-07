@@ -39,6 +39,7 @@ using namespace cv;
 
 void createSobels();
 void CreateGistVector(Mat I, double *Allfeatures);
+void TrainNN();
 std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
@@ -61,11 +62,12 @@ int main(void)
 	ofstream featurewrite;
 	featurewrite.open("p.csv", ios::app);
 	int counter = 0;
-	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+
+	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
 	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
 	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
 		cout << FindFileData.cFileName;
 		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 		double *p = new double[544];
@@ -94,12 +96,12 @@ int main(void)
 		counter = 0;
 		cout << "\n";
 		//
-		path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+		path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
 		hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
 		
 		while (hFind != INVALID_HANDLE_VALUE){
-			path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bedroom_indoor_256x256_static\\";
+			path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
 			cout << FindFileData.cFileName;
 			Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 			double *p = new double[544];
@@ -256,8 +258,27 @@ int main(void)
 
 		}
 	}
-
+	ofstream fileWriter;
+	fileWriter.open("NNInput.csv", ios::app);
 	Mat FinalFeaturesMatrix = SourceData*WPCA;
+
+	double minVal;
+	double maxVal;
+	Point minLoc;
+	Point maxLoc;
+	minMaxLoc(FinalFeaturesMatrix, &minVal, &maxVal, &minLoc, &maxLoc);
+
+	cout << "min val : " << minVal << endl;
+	cout << "max val: " << maxVal << endl;
+	double normalizationFactor;
+	if (abs(minVal) > abs(maxVal)){
+		 normalizationFactor = abs(minVal);
+
+	}
+	else{
+		normalizationFactor = abs(minVal);
+
+	}
 	vector<NNInputData> ReadyForNN;
 	int CV = 0;
 	int startingIndex = 0;
@@ -268,18 +289,21 @@ int main(void)
 			std::vector<double> holder;
 			CV = z;
 			for (int j = 0; j < jTop; j++){
-				holder.push_back(FinalFeaturesMatrix.at<float>(i, j));
-
+				holder.push_back(FinalFeaturesMatrix.at<float>(i, j) / normalizationFactor);
+				fileWriter << FinalFeaturesMatrix.at<float>(i, j) / normalizationFactor;
+				fileWriter << ",";
 			}
+			fileWriter << CV;
 			NNInputData t(holder, CV);
+			fileWriter << "\n";
 			ReadyForNN.push_back(t);
 		}
 	}
-
-	int numIter = 100;
+	fileWriter.close();
+	int numIter = 1;
 	double inputsize = ReadyForNN[0].features.size();
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, -1, 1);
-	GenAlg* MyEarth = new GenAlg(10, .05, .5, myNN, ReadyForNN);
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 20, -1, 1);
+	GenAlg* MyEarth = new GenAlg(200, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){
 		MyEarth->Epoch(currentpopulation);
@@ -287,6 +311,10 @@ int main(void)
 		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 		cout << MyEarth->BestFitness() / ReadyForNN.size();
 		cout << "\n";
+		cout << MyEarth->AverageFitness() / ReadyForNN.size();
+		cout << "\n";
+		fileWriter.open("Classifications.csv");
+		fileWriter << "";
 	}
 
 	

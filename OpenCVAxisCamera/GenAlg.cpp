@@ -1,5 +1,5 @@
 #include "GenAlg.h"
-#include <iostream>
+
 #include <algorithm>
 
 
@@ -86,7 +86,6 @@ void  GenAlg::GrabNBest(int  NBest,
 	std::sort(m_vecPop.begin(), m_vecPop.end());
 
 	if (NBest*NumCopies > m_iPopSize){
-		std::cout << "truncating your request";
 		NBest = m_iPopSize / NumCopies;
 	}
 	for (int i = 0; i < NBest; i++){
@@ -151,12 +150,19 @@ int GenAlg::Fitness(SGenome gene, int index){
 	m_NN->PutWeights(gene.vecWeights);
 	int fitnesscount = 0;
 	// run through all of the inputs and checking the output to judge fitness
+	fitnessC.open("Classifications.csv",std::ios::app);
 	for (int i = 0; i < m_Inputs.size(); i++){
 		m_NN_Classification = interpertOutput(m_NN->Update(m_Inputs[i].features));
 		if (m_NN_Classification == m_Inputs[i].CorrectDiagnosis){
 			fitnesscount++;
 		}
+		
+		fitnessC << m_NN_Classification;
+		fitnessC << ",";
+
 	}
+	fitnessC << "\n";
+	fitnessC.close();
 
 	gene.dFitness = fitnesscount;
 	if (fitnesscount >= m_dBestFitness){
@@ -168,7 +174,50 @@ int GenAlg::Fitness(SGenome gene, int index){
 		m_iWorstGenome = index;
 		m_dWorstFitness = fitnesscount;
 	}
+	
+	fitnessC.open("Fitness.csv", std::ios::app);
+	fitnessC << fitnesscount;
+	fitnessC << ",";
+	fitnessC.close();
 	return fitnesscount;
+}
+
+int GenAlg::FitnessDiversity(SGenome gene, int index){
+	//set the neural network with proper weights
+	m_NN->PutWeights(gene.vecWeights);
+	int fitnesscount = 0;
+	// run through all of the inputs and checking the output to judge fitness
+	fitnessC.open("Classifications.csv", std::ios::app);
+	for (int i = 0; i < m_Inputs.size(); i++){
+		m_NN_Classification = interpertOutput(m_NN->Update(m_Inputs[i].features));
+		if (m_NN_Classification == m_Inputs[i].CorrectDiagnosis){
+			fitnesscount++;
+		}
+
+		fitnessC << m_NN_Classification;
+		fitnessC << ",";
+
+	}
+	fitnessC << "\n";
+	fitnessC.close();
+
+	gene.dFitness = fitnesscount;
+	if (fitnesscount >= m_dBestFitness){
+		m_iFittestGenome = index;
+		m_dBestFitness = fitnesscount;
+	}
+
+	if (fitnesscount <= m_dWorstFitness){
+		m_iWorstGenome = index;
+		m_dWorstFitness = fitnesscount;
+	}
+
+	fitnessC.open("Fitness.csv", std::ios::app);
+	fitnessC << fitnesscount;
+	fitnessC << ",";
+	fitnessC.close();
+	return fitnesscount;
+
 }
 
 std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
@@ -177,6 +226,9 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 	for (int i = 0; i < old_pop.size(); i++){
 		tempTotalFitness += Fitness(m_vecPop[i], i);
 	}
+	fitnessC.open("Fitness.csv", std::ios::app);
+	fitnessC << "\n";
+	fitnessC.close();
 	m_dTotalFitness = tempTotalFitness;
 	m_dAverageFitness = m_dTotalFitness / m_iPopSize;
 	m_cGeneration++;

@@ -1,5 +1,7 @@
 #pragma once
 #include "FFNeuralNetwork.h"
+#include <iostream>
+#include <fstream>
 #include "Resource.h"
 
 
@@ -46,6 +48,8 @@ private:
 	int  m_cGeneration;
 	//pointer to the NN to be operated on
 	FFNeuralNetwork* m_NN;
+
+	std::ofstream fitnessC;
 	void  Crossover(const std::vector<double> &mum,
 					const std::vector<double> &dad,
 					std::vector<double>       &baby1,
@@ -59,6 +63,7 @@ private:
 
 	void CalculateBestWorstAvTot();
 	int Fitness(SGenome gene, int index ); 
+	int FitnessDiversity(SGenome gene, int index);
 	void  Reset();
 
 	int interpertOutput(std::vector<double> output);

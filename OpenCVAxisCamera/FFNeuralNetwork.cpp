@@ -96,10 +96,12 @@ void FFNeuralNetwork::hardThreshold(std::vector<double> &doutputs){
 	 
 	for (int i = 0; i < doutputs.size(); i++){
 		if (doutputs[i] < outputThreshold){
+			double ti = doutputs[i];
 			doutputs[i] = 0;
 
 		}
 		else{
+			double ti = doutputs[i];
 			doutputs[i] = 1;
 		}
 	}
