@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\SLAM">
+      <UniqueIdentifier>{d1baaaf5-8835-4681-b4b5-ced7f20cab34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">
@@ -71,6 +74,21 @@
     </ClCompile>
     <ClCompile Include="statistics.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SLAM\TimeWindow.cpp">
+      <Filter>Source Files\SLAM</Filter>
+    </ClCompile>
+    <ClCompile Include="SLAM\ActionReadSonar.cpp">
+      <Filter>Source Files\SLAM</Filter>
+    </ClCompile>
+    <ClCompile Include="SLAM\ActionStop.cpp">
+      <Filter>Source Files\SLAM</Filter>
+    </ClCompile>
+    <ClCompile Include="SLAM\AmigoBot.cpp">
+      <Filter>Source Files\SLAM</Filter>
+    </ClCompile>
+    <ClCompile Include="SLAM\amigoLab.cpp">
+      <Filter>Source Files\SLAM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +151,18 @@
     </ClInclude>
     <ClInclude Include="solvers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SLAM\TimeWindow.h">
+      <Filter>Source Files\SLAM</Filter>
+    </ClInclude>
+    <ClInclude Include="SLAM\ActionReadSonar.h">
+      <Filter>Source Files\SLAM</Filter>
+    </ClInclude>
+    <ClInclude Include="SLAM\ActionStop.h">
+      <Filter>Source Files\SLAM</Filter>
+    </ClInclude>
+    <ClInclude Include="SLAM\AmigoBot.h">
+      <Filter>Source Files\SLAM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

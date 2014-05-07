@@ -63,6 +63,8 @@ int main(void)
 		cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
 	}
 	//TrainNN();
+
+	return 0;
 }
 
 
