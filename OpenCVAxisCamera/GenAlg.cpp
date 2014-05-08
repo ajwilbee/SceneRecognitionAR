@@ -336,10 +336,13 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 
 void GenAlg::writeBestWeights(){
 	fitnessC.open("BestNNWeights.csv");
+	std::vector <double>  Looking = m_vecPop[m_iFittestGenome].vecWeights;
+	int WhatSize = m_vecPop[m_iFittestGenome].vecWeights.size();
 	for (int i = 0; i < m_vecPop[m_iFittestGenome].vecWeights.size(); i++){
 		fitnessC << m_vecPop[m_iFittestGenome].vecWeights[i];
 		fitnessC << ",";
 	}
+	fitnessC.close();
 
 
 }

@@ -40,6 +40,8 @@ using namespace cv;
 void createSobels();
 void CreateGistVector(Mat I, double *Allfeatures);
 void TrainNN();
+void InitializeNN();
+void LiveProcessing();
 std::vector<NNInputData> readExcelCSV();
 const double pi = 3.14159;
 Mat d45 = Mat(3, 3, CV_64FC1);
@@ -47,48 +49,117 @@ Mat d135 = Mat(3, 3, CV_64FC1);
 Mat vert = Mat(3, 3, CV_64FC1);
 Mat horz = Mat(3, 3, CV_64FC1);
 
+std::vector <double>  vecWeights;
+std::vector <double>  ZeroMean;
+int iArrayWidth;
+int jTop;
+Mat WPCA;
+double normalizationFactor;
+Mat img;
+FFNeuralNetwork* myNN;
+ofstream fileout;
+VideoCapture videoCapture;
 
 
 int main(void)
 {
+	//TrainNN();
+	InitializeNN();
+	
+
+
+	//this will go into 
+	
+	while (waitKey(10) != 'ESC')
+	{
+		LiveProcessing();
+		////videoCapture >> img;
+		//img = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
+		//double *p = new double[544];
+		//CreateGistVector(img, p);
+		////make it zero mean
+		//for (int i = 0; i < 544; i++)
+		//{
+		//	p[i] = p[i] - ZeroMean[i];
+		//}
+		////make a mat for matrix multiplication
+		//Mat SourceData = Mat::zeros(1, 544, CV_32F);
+		//for (int j = 0; j < 544; j++)
+		//{
+		//	SourceData.at<float>(0, j) = p[j];
+		//}
+
+		//Mat FinalFeaturesMatrix = SourceData*WPCA;
+		//// prep data to be put directly through NN
+		//int CV = 0;
+		//std::vector<double> holder;
+		//for (int j = 0; j < jTop; j++){
+		//	holder.push_back(FinalFeaturesMatrix.at<float>(0, j) / normalizationFactor);
+		//}
+
+		//NNInputData t(holder, CV);
+
+		////output result
+		//vector<double> classification = myNN->Update(t.features);
+		//fileout.open("Classification.csv", std::ios::app);
+		//fileout << classification[0] << ",";
+		//fileout.close();
+		//classification.empty();
+
+		//// set up NN
+		//imshow("RAW", img);
+		//waitKey(0);
+
+	}
+
+
+	delete myNN;
+	return 0;
+}
+void InitializeNN(){
 
 	// get the NN best weights
 	ifstream file("BestNNWeights.csv");
 	string value;
-	std::vector <double>  vecWeights;
+
+	//wrong number of values are being read in ... find and fix
 	double tempdouble = 0.0;
 	while (file.good())
 	{
 		getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
-		tempdouble = strtod(value.c_str(),NULL);
+		tempdouble = strtod(value.c_str(), NULL);
 		vecWeights.push_back(tempdouble);
-		cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
+		//cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
 	}
+	vecWeights.pop_back();
 	file.close();
-	
+
 	//make the zero means vector
 	file.open("ZeroMeanValues.csv");
-	std::vector <double>  ZeroMean;
+
 	tempdouble = 0.0;
 	while (file.good())
 	{
 		getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
 		tempdouble = strtod(value.c_str(), NULL);
 		ZeroMean.push_back(tempdouble);
-		cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
+		//cout << string(value, 1, value.length() - 2); // display value removing the first and the last character from it
 	}
+	ZeroMean.pop_back();
+	file.close();
+
 	// make WPCA width and height
-	int iArrayWidth;
-	int jTop;
+
 	file.open("WPCARowandColumn.csv");
 	tempdouble = 0.0;
 	getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
 	iArrayWidth = atoi(value.c_str());
 	getline(file, value, ','); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
 	jTop = atoi(value.c_str());
+	file.close();
 
 	//make WPCA
-	Mat WPCA = Mat::zeros(iArrayWidth, jTop, CV_32F);
+	WPCA = Mat::zeros(iArrayWidth, jTop, CV_32F);
 	file.open("WPCAVals.csv");
 	for (int i = 0; i < iArrayWidth; i++)
 	{
@@ -98,18 +169,74 @@ int main(void)
 			getline(file, value, ',');
 			tempdouble = strtod(value.c_str(), NULL);
 			WPCA.at<float>(i, j) = tempdouble;
-			
+
 		}
 
 		//each element in WPCA is a row of the WPCA Matrix
 	}
+	file.close();
 
+	// get normalization constant
+	file.open("NormalizationConstant.csv");
+	getline(file, value, ',');
+	normalizationFactor = strtod(value.c_str(), NULL);;
+	file.close();
 	// now make the NN and process a single image
-	//TrainNN();
 
-	return 0;
+	videoCapture.open("http://axis2.student.rit.edu/mjpg/video.mjpg"); //http://axis1.student.rit.edu/mjpg/video.mjpg
+	cvWaitKey(5000);
+	if (!videoCapture.isOpened()){
+
+		int temp = 1;
+	}
+	// set up NN
+	//JTop is the number of inputs, should make the rest of initial values constants somewhere
+	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, 20, -1, 1);
+	myNN->PutWeights(vecWeights);
 }
 
+void LiveProcessing(){
+	
+	//swap these to swithc between live and not
+	//videoCapture >> img;
+	img = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
+
+
+	double *p = new double[544];
+	CreateGistVector(img, p);
+	//make it zero mean
+	for (int i = 0; i < 544; i++)
+	{
+		p[i] = p[i] - ZeroMean[i];
+	}
+	//make a mat for matrix multiplication
+	Mat SourceData = Mat::zeros(1, 544, CV_32F);
+	for (int j = 0; j < 544; j++)
+	{
+		SourceData.at<float>(0, j) = p[j];
+	}
+
+	Mat FinalFeaturesMatrix = SourceData*WPCA;
+	// prep data to be put directly through NN
+	int CV = 0;
+	std::vector<double> holder;
+	for (int j = 0; j < jTop; j++){
+		holder.push_back(FinalFeaturesMatrix.at<float>(0, j) / normalizationFactor);
+	}
+
+	NNInputData t(holder, CV);
+
+	//output result
+	vector<double> classification = myNN->Update(t.features);
+	fileout.open("Live_Classification.csv", std::ios::app);
+	fileout << classification[0] << ",";
+	fileout.close();
+	classification.empty();
+
+	// set up NN
+	imshow("RAW", img);
+	waitKey(0);
+}
 
 void TrainNN(){
 
@@ -294,7 +421,7 @@ void TrainNN(){
 	Point minLoc;
 	Point maxLoc;
 	minMaxLoc(FinalFeaturesMatrix, &minVal, &maxVal, &minLoc, &maxLoc);
-
+	WPCAVals.open("NormalizationConstant");
 	cout << "min val : " << minVal << endl;
 	cout << "max val: " << maxVal << endl;
 	double normalizationFactor;
@@ -306,6 +433,11 @@ void TrainNN(){
 		normalizationFactor = abs(minVal);
 
 	}
+
+	WPCAVals.open("NormalizationConstant.csv");
+	WPCAVals << normalizationFactor;
+	WPCAVals.close();
+
 	vector<NNInputData> ReadyForNN;
 	int CV = 0;
 	int startingIndex = 0;
@@ -329,6 +461,7 @@ void TrainNN(){
 	fileWriter.close();
 	int numIter = 1;
 	double inputsize = ReadyForNN[0].features.size();
+	//may want to make the NN values constants defined somewhere eventually
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 20, -1, 1);
 	GenAlg* MyEarth = new GenAlg(200, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
@@ -503,6 +636,50 @@ void createSobels(){
 
 
 }
+
+
+//Mat output;//CV_32FC1
+//cvtColor(img, img, CV_RGB2GRAY);
+//img.copyTo(output);
+//Gabor test = Gabor(1, 0.5, 0, 8, 0); // the last one is theta
+//Mat AllOnes = Mat::ones(3, 3, img.type());
+//Mat onemore = Mat(img.size(), test.getFilter().type());
+//img.copyTo(onemore);
+//Mat gbfilter = test.getFilter();
+//pyrDown(gbfilter, gbfilter);
+//pyrDown(gbfilter, gbfilter);
+//
+//filter2D(onemore / 255, output, img.depth(), gbfilter);
+//Mat looking = test.getFilter();
+//double t = looking.at<double>(35, 35);
+////normalize(output, output);
+//output = output / 30;
+//output = output * 255;
+//
+//Mat done = Mat(img.size(), img.type());
+//output.copyTo(done);
+
+
+
+
+
+
+//if (!inputIm.data)                              // Check for invalid input
+//{
+//	cout << "Could not open or find the image" << std::endl;
+//	return -1;
+//}
+/*namedWindow("RAW", 1);
+imshow("RAW", inputIm);*/
+
+/*createSobels();
+Mat output;
+
+filter2D(inputIm, output, inputIm.depth(), d45);
+imshow("filtered", output);
+waitKey(0);*/
+
+
 
 
 //	cout << "\n";
