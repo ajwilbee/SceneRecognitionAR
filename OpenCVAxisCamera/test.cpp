@@ -48,7 +48,7 @@ Mat d45 = Mat(3, 3, CV_64FC1);
 Mat d135 = Mat(3, 3, CV_64FC1);
 Mat vert = Mat(3, 3, CV_64FC1);
 Mat horz = Mat(3, 3, CV_64FC1);
-
+int NumNeurons = 10;
 std::vector <double>  vecWeights;
 std::vector <double>  ZeroMean;
 int iArrayWidth;
@@ -63,8 +63,8 @@ VideoCapture videoCapture;
 
 int main(void)
 {
-	//TrainNN();
-	InitializeNN();
+	TrainNN();
+	//InitializeNN();
 	
 
 
@@ -191,7 +191,7 @@ void InitializeNN(){
 	}
 	// set up NN
 	//JTop is the number of inputs, should make the rest of initial values constants somewhere
-	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, 20, -1, 1);
+	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, NumNeurons, -1, 1);
 	myNN->PutWeights(vecWeights);
 }
 
@@ -459,10 +459,10 @@ void TrainNN(){
 		}
 	}
 	fileWriter.close();
-	int numIter = 1;
+	int numIter = 10;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 20, -1, 1);
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, 1);
 	GenAlg* MyEarth = new GenAlg(200, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){

@@ -67,7 +67,7 @@ void  GenAlg::Mutate(std::vector<double> &chromo)
 		double thresh = 1;
 		//will mutate the genes at a rate dictated by mutation, looks at every gene and decides
 		if (temp < thresh*m_dMutationRate){
-			chromo[i] = fRand(0, 1)-.5;
+			chromo[i] = fRand(0, 1);
 		}
 
 	}
@@ -118,9 +118,8 @@ void  GenAlg::Reset()
 	double temp;
 	for (int i = 0; i < m_iPopSize; i++){
 		for (int j = 0; j < m_iChromoLength; j++){
-			double temp = fRand(0, 1)-.5;
+			double temp = fRand(0, 1);// was minus .5 to get range -.5 to .5, now 0 to 1;
 			weightHolder.push_back(temp);
-
 		}
 		m_vecPop.push_back(SGenome(weightHolder, 0));
 		weightHolder.clear();
@@ -255,8 +254,7 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 		}
 		myfile << "\n";
 	}
-	
-
+	myfile.close();
 
 	fitnessC.open("Fitness.csv", std::ios::app);
 	fitnessC << "\n";
