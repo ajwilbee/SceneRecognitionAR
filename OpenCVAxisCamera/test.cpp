@@ -53,6 +53,7 @@ std::vector <double>  vecWeights;
 std::vector <double>  ZeroMean;
 int iArrayWidth;
 int jTop;
+int sigmoidShape = 2;
 Mat WPCA;
 double normalizationFactor;
 Mat img;
@@ -192,7 +193,7 @@ void InitializeNN(){
 	}
 	// set up NN
 	//JTop is the number of inputs, should make the rest of initial values constants somewhere
-	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, NumNeurons, -1, 1);
+	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, NumNeurons, -1, sigmoidShape);
 	myNN->PutWeights(vecWeights);
 }
 
@@ -244,7 +245,7 @@ void TrainNN(){
 	// can make this a function if sure that can pass the vector around without it breaking, try tommorrow if you want
 	// could also make it a loop if the directories are put into a string array.
 	vector<double*> AllImageFeatures;
-	double numberOfImagesInDirectory[4];
+	double numberOfImagesInDirectory[2];
 
 	WIN32_FIND_DATA FindFileData;
 
@@ -300,7 +301,7 @@ void TrainNN(){
 
 
 		AllImageFeatures.push_back(p);
-
+		counter++;
 		if (!FindNextFile(hFind, &FindFileData))
 		{
 			FindClose(hFind);
@@ -443,7 +444,8 @@ void TrainNN(){
 	int CV = 0;
 	int startingIndex = 0;
 	int endingIndex = 0;
-	for (int z = 0; z < sizeof(numberOfImagesInDirectory); z++){
+	for (int z = 0; z < 2; z++){
+		startingIndex = endingIndex;
 		endingIndex = endingIndex + numberOfImagesInDirectory[z];
 		for (int i = startingIndex; i < endingIndex; i++){
 			std::vector<double> holder;
@@ -457,22 +459,26 @@ void TrainNN(){
 			NNInputData t(holder, CV);
 			fileWriter << "\n";
 			ReadyForNN.push_back(t);
+			
 		}
 	}
 	fileWriter.close();
-	int numIter = 5000;
+	int numIter = 10;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, 1);
-	GenAlg* MyEarth = new GenAlg(200, .05, .5, myNN, ReadyForNN);
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, sigmoidShape);
+	GenAlg* MyEarth = new GenAlg(100, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){
-		MyEarth->Epoch(currentpopulation);
+		if (i < numIter / 5){
+			MyEarth->Epoch(currentpopulation,0);
+		}
+		else{
+			MyEarth->Epoch(currentpopulation,1);
+		}
 		std::vector<SGenome> temp = MyEarth->GetChromos();
 		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-		cout << MyEarth->BestFitness();
-		cout << "\n";
-		cout << MyEarth->AverageFitness();
+		cout << "\n" <<MyEarth->BestFitness();
 		cout << "\n";
 		fileWriter.open("Classifications.csv");
 		fileWriter << "";

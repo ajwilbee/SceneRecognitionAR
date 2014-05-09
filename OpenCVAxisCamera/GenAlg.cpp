@@ -22,8 +22,8 @@ GenAlg::GenAlg(int    popsize,
 	m_Inputs = Inputs;
 	
 	m_iFittestGenome = -1;
-	
-	
+	QueryPerformanceFrequency(&Frequency);
+	getExpectedoutputcount();
 
 	Reset();
 }
@@ -144,6 +144,20 @@ int GenAlg::interpertOutput(std::vector<double> output){
 	return intoutput;
 
 }
+void GenAlg::getExpectedoutputcount(){
+	//use vector to make size scaleable
+	for (int i = 0; i < m_Inputs.size(); i++){
+		
+		if (m_Inputs[i].CorrectDiagnosis == 0){
+				expected0++;
+			}
+			if (m_Inputs[i].CorrectDiagnosis == 1){
+				expected1++;
+			}
+		}
+	TotalInputs = expected0 + expected1;
+
+}
 
 //calls the NN recieves the output and determines the fitness of the gene
 // may wish to abstract out the NN call
@@ -152,7 +166,6 @@ int GenAlg::Fitness(SGenome &gene, int index){
 	m_NN->PutWeights(gene.vecWeights);
 	double correct0 = 0;
 	double correct1 = 0;
-	double expected = 62.0; // make variable later
 
 	// run through all of the inputs and checking the output to judge fitness
 	fitnessC.open("Classifications.csv",std::ios::app);
@@ -171,9 +184,9 @@ int GenAlg::Fitness(SGenome &gene, int index){
 		fitnessC << ",";
 
 	}
-
-	correct0 /= expected;
-	correct1 /= expected;
+	TotalCorrect = correct0 + correct1;
+	correct0 /= expected0;
+	correct1 /= expected1;
 	gene.dFitness = correct0*correct1;
 	
 
@@ -184,7 +197,9 @@ int GenAlg::Fitness(SGenome &gene, int index){
 	if (gene.dFitness >= m_dBestFitness){
 		Bestcorrect0 = correct0;
 		Bestcorrect1 = correct1;
-		cout << "\n" << "Best Correct 0 " << correct0 << "\n" << "Best Correct 1 " << correct1;
+		BestTotalCorrect = TotalCorrect;
+		cout << "\n" << "Best Correct 0 " << correct0 << "\n" << "Best Correct 1 " << correct1 << "\n";
+		cout << "CorrectPercentage" << BestTotalCorrect / TotalInputs << "\n";
 		m_iFittestGenome = index;
 		m_dBestFitness = gene.dFitness;
 	}
@@ -201,8 +216,9 @@ int GenAlg::Fitness(SGenome &gene, int index){
 	return gene.dFitness;
 }
 
-int GenAlg::FitnessDiversity(SGenome gene, int index){
+int GenAlg::Fitness2(SGenome gene, int index){
 	//set the neural network with proper weights
+	
 	m_NN->PutWeights(gene.vecWeights);
 	int fitnesscount = 0;
 	// run through all of the inputs and checking the output to judge fitness
@@ -239,15 +255,21 @@ int GenAlg::FitnessDiversity(SGenome gene, int index){
 
 }
 
-std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
+std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop, int FitnessFunctionToUse)
 {
-
+	QueryPerformanceCounter(&t1);
 	ofstream myfile;
 	myfile.open("GENE.csv", ios::app);
 
 	double tempTotalFitness = 0;
 	for (int i = 0; i < old_pop.size(); i++){
-		tempTotalFitness += Fitness(m_vecPop[i], i);
+		if (FitnessFunctionToUse == 0){
+			tempTotalFitness += Fitness(m_vecPop[i], i);
+		}
+		else{
+			tempTotalFitness += Fitness2(m_vecPop[i], i);
+		}
+
 	}
 
 	for (int i = 0; i < m_vecPop.size(); i++)
@@ -332,7 +354,8 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop)
 
 	//myfile << "\n";
 	myfile.close();
-
+	QueryPerformanceCounter(&t2);
+	TimeElapsed = (t2.QuadPart - t1.QuadPart)*1000000.0 / Frequency.QuadPart;
 	return m_vecPop;
 }
 

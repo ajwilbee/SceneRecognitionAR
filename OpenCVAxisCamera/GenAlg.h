@@ -49,8 +49,18 @@ private:
 	//pointer to the NN to be operated on
 	FFNeuralNetwork* m_NN;
 
+	double expected0;
+	double expected1;
+	double BestTotalCorrect;
+	double TotalInputs;
+	double TotalCorrect;
+
 	double Bestcorrect0;
 	double Bestcorrect1;
+
+	LARGE_INTEGER Frequency;
+	LARGE_INTEGER t1, t2;
+	double TimeElapsed;
 
 	std::ofstream fitnessC;
 	void  Crossover(const std::vector<double> &mum,
@@ -66,9 +76,9 @@ private:
 
 	void CalculateBestWorstAvTot();
 	int Fitness(SGenome &gene, int index ); 
-	int FitnessDiversity(SGenome gene, int index);
+	int Fitness2(SGenome gene, int index);
 	void  Reset();
-
+	void getExpectedoutputcount();
 	int interpertOutput(std::vector<double> output);
 
 public:
@@ -83,7 +93,7 @@ public:
 
 	//this runs the GA for one generation.
 
-	std::vector<SGenome> Epoch(std::vector<SGenome> &old_pop);
+	std::vector<SGenome> Epoch(std::vector<SGenome> &old_pop, int FitnessFunctionToUse);
 
 	//-------------------accessor methods
 

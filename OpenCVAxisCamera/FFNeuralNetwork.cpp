@@ -4,6 +4,7 @@
 
 
 
+
 FFNeuralNetwork::FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLayers, int NeuronsPerHiddenLayer, int Bias, double response)
 {
 	m_NumInputs = NumInputs;
@@ -12,6 +13,7 @@ FFNeuralNetwork::FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLay
 	m_NeuronsPerHiddenLayer = NeuronsPerHiddenLayer;
 	m_Bias = Bias;
 	m_Response = response;
+	QueryPerformanceFrequency(&Frequency);
 	CreateNet();
 
 }
@@ -20,7 +22,7 @@ FFNeuralNetwork::FFNeuralNetwork(int NumInputs, int NumOutputs, int NumHiddenLay
 
 std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 	//stores the resultant outputs from each layer
-
+	QueryPerformanceCounter(&t1);
 	std::vector<double> outputs;
 
 	int cWeight = 0;
@@ -89,6 +91,8 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 	}
 	tempInputs.clear();
 	hardThreshold(outputs);
+	QueryPerformanceCounter(&t2);
+	TimeElapsed = (t2.QuadPart - t1.QuadPart)*1000000.0 / Frequency.QuadPart;
 	return outputs;
 
 }

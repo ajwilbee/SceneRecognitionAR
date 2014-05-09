@@ -1,5 +1,6 @@
 #pragma once
 #include "Resource.h"
+#include <windows.h>
 
 /*
 code used and modified from
@@ -28,8 +29,12 @@ private:
 	int m_NeuronsPerHiddenLayer;
 	int m_totalNumberofWeights;
 	int m_Bias;
-	const double outputThreshold = .5;
+	const double outputThreshold = .8;
 	double m_Response;
+	LARGE_INTEGER Frequency;
+	LARGE_INTEGER t1, t2;
+	double TimeElapsed;
+
 	// storage for each layer of neurons including the output layer
 	std::vector<double> curweights;
 	std::vector<SNeuronLayer> m_vec_Layers;
