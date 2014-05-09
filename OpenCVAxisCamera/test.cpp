@@ -70,9 +70,10 @@ int main(void)
 
 	//this will go into 
 	
-	while (waitKey(10) != 'ESC')
+	/*while (waitKey(10) != 'ESC')
 	{
-		LiveProcessing();
+		LiveProcessing();*/
+
 		////videoCapture >> img;
 		//img = imread("opencv-logo-white.png", CV_LOAD_IMAGE_COLOR);
 		//double *p = new double[544];
@@ -110,7 +111,7 @@ int main(void)
 		//imshow("RAW", img);
 		//waitKey(0);
 
-	}
+	/*}*/
 
 
 	delete myNN;
@@ -459,7 +460,7 @@ void TrainNN(){
 		}
 	}
 	fileWriter.close();
-	int numIter = 10;
+	int numIter = 5000;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, 1);

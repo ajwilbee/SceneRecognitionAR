@@ -176,11 +176,15 @@ int GenAlg::Fitness(SGenome &gene, int index){
 	correct1 /= expected;
 	gene.dFitness = correct0*correct1;
 	
+
 	fitnessC << "\n";
 	fitnessC.close();
 
 	
 	if (gene.dFitness >= m_dBestFitness){
+		Bestcorrect0 = correct0;
+		Bestcorrect1 = correct1;
+		cout << "\n" << "Best Correct 0 " << correct0 << "\n" << "Best Correct 1 " << correct1;
 		m_iFittestGenome = index;
 		m_dBestFitness = gene.dFitness;
 	}

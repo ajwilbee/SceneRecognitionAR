@@ -49,6 +49,9 @@ private:
 	//pointer to the NN to be operated on
 	FFNeuralNetwork* m_NN;
 
+	double Bestcorrect0;
+	double Bestcorrect1;
+
 	std::ofstream fitnessC;
 	void  Crossover(const std::vector<double> &mum,
 					const std::vector<double> &dad,
