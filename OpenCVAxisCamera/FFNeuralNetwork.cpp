@@ -76,6 +76,7 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 
 			//add in the bias
 			// ignor the bias for now, it is essentially just another weight... will add if needed
+			double BiasWeight = m_vec_Layers[i].m_vecNeurons[j].m_vecWeight[NumInputs - 1];
 			netinput += m_vec_Layers[i].m_vecNeurons[j].m_vecWeight[NumInputs - 1] * m_Bias;
 			//we can store the outputs from each layer as we generate them. 
 
@@ -84,6 +85,7 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 			//function	
 			double sigmoidOut = Sigmoid(netinput, m_Response);//netinput, m_Response
 			outputs.push_back(sigmoidOut);
+			sigmoidOut = sigmoidOut;
 	//		cWeight = 0;
 
 		}

@@ -463,7 +463,7 @@ void TrainNN(){
 		}
 	}
 	fileWriter.close();
-	int numIter = 10;
+	int numIter = 20;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, sigmoidShape);
@@ -478,7 +478,7 @@ void TrainNN(){
 		}
 		std::vector<SGenome> temp = MyEarth->GetChromos();
 		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-		cout << "\n" <<MyEarth->BestFitness();
+		cout << "\n" << "Epoch " << i <<  " the best fitness is " <<MyEarth->BestFitness();
 		cout << "\n";
 		fileWriter.open("Classifications.csv");
 		fileWriter << "";

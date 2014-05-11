@@ -15,6 +15,11 @@ struct SGenome
 	{
 		return (lhs.dFitness < rhs.dFitness);
 	}
+
+	friend bool operator>(const SGenome& lhs, const SGenome& rhs)
+	{
+		return (lhs.dFitness > rhs.dFitness);
+	}
 };
 
 struct SNeuron

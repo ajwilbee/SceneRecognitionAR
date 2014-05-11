@@ -29,7 +29,7 @@ private:
 	int m_NeuronsPerHiddenLayer;
 	int m_totalNumberofWeights;
 	int m_Bias;
-	const double outputThreshold = .8;
+	const double outputThreshold = .3;
 	double m_Response;
 	LARGE_INTEGER Frequency;
 	LARGE_INTEGER t1, t2;
