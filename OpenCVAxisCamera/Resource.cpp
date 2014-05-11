@@ -52,11 +52,11 @@ ColorFeature::ColorFeature(Mat *FMap){
 				// check for boundary conditions on the high end, 
 				int tc = stepSizeColumn*(i + 1);
 				int tr = stepSizeRow*(j + 1);
-				if (tr >s.height){
-					tr = s.height;
+				if (tc >s.height){
+					tc = s.height;
 				}
-				if (tc >s.width){
-					tc = s.width;
+				if (tr >s.width){
+					tr = s.width;
 				}
 				Mat E = FMap[k](Range(stepSizeColumn*i, tc), Range(stepSizeRow*j, tr));
 				ExtractedFeatures[counter] = mean(E)[0]; // values are returned in a vector the same length as the number of layers
@@ -90,11 +90,12 @@ OrientationFeature::OrientationFeature(Mat *FMap){
 				// check for boundary conditions on the high end, 
 				int tc = stepSizeColumn*(i + 1);
 				int tr = stepSizeRow*(j + 1);
-				if (tr >s.height){
-					tr = s.height;
+				//find a way to make these match the file orientation rather than matching each time to a new formate
+				if (tc >s.height){
+					tc = s.height;
 				}
-				if (tc >s.width){
-					tc = s.width;
+				if (tr >s.width){
+					tr = s.width;
 				}
 				Mat E = FMap[k](Range(stepSizeColumn*i, tc), Range(stepSizeRow*j, tr));
 				ExtractedFeatures[counter] = mean(E)[0]; // values are returned in a vector the same length as the number of layers

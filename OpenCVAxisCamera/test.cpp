@@ -279,13 +279,15 @@ void TrainNN(){
 	featurewrite.open("p.csv", ios::app);
 	int counter = 0;
 
-	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+	string path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Robo_Lab\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	string path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Robo_Lab\\";
 	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
 	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\corridor_indoor_set2_256x256_static\\";
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Robo_Lab\\";
 		cout << FindFileData.cFileName;
 		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
+		/*imshow("temp", inputIm);
+		waitKey(0);*/
 		double *p = new double[544];
 		CreateGistVector(inputIm, p);
 
@@ -312,12 +314,12 @@ void TrainNN(){
 	counter = 0;
 	cout << "\n";
 	//
-	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
-	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+	path1 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Erdle\\";//\Aaron\Documents\Visual Studio 2013\Projects\OpenCVAxisCamera\OpenCVAxisCamera
+	path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Erdle\\";
 	hFind = FindFirstFile(path1.append("*.jpg").c_str(), &FindFileData);
 
 	while (hFind != INVALID_HANDLE_VALUE){
-		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Images\\bathroom_indoor_256x256_static\\";
+		path2 = "C:\\Users\\Aaron\\Documents\\AdvancedRoboticsFP\\Erdle\\";
 		cout << FindFileData.cFileName;
 		Mat inputIm = imread(path2.append(FindFileData.cFileName), CV_LOAD_IMAGE_COLOR);
 		double *p = new double[544];
@@ -568,8 +570,9 @@ void CreateGistVector(Mat I, double *AllFeatures){
 	/*real_2d_array PCAarray; http://forum.alglib.net/viewtopic.php?f=2&t=60
 	PCAarray;
 	pcabuildbasis(const real_2d_array &x, const ae_int_t npoints, const ae_int_t nvars, ae_int_t &info, real_1d_array &s2, real_2d_array &v);*/
-	Orienation_Channel OC = Orienation_Channel(I);
 	Color_Channel CC = Color_Channel(copyI);
+	Orienation_Channel OC = Orienation_Channel(I);
+	
 	
 	//double AllFeatures[(64) * 4 + (96) * 3];
 	int counter = 0;
