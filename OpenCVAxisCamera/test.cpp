@@ -56,6 +56,7 @@ int jTop;
 int sigmoidShape = 2;
 Mat WPCA;
 double normalizationFactor;
+double Bias = -10;
 Mat img;
 FFNeuralNetwork* myNN;
 ofstream fileout;
@@ -193,7 +194,7 @@ void InitializeNN(){
 	}
 	// set up NN
 	//JTop is the number of inputs, should make the rest of initial values constants somewhere
-	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, NumNeurons, -1, sigmoidShape);
+	myNN = new FFNeuralNetwork((int)(jTop), 1, 1, NumNeurons, Bias, sigmoidShape);
 	myNN->PutWeights(vecWeights);
 }
 
@@ -466,7 +467,7 @@ void TrainNN(){
 	int numIter = 20;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, -1, sigmoidShape);
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, Bias, sigmoidShape);
 	GenAlg* MyEarth = new GenAlg(100, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){

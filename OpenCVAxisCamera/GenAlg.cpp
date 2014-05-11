@@ -266,55 +266,7 @@ int GenAlg::Fitness2(SGenome gene, int index){
 	return fitnesscount;
 
 }
-int GenAlg::Fitness2(SGenome gene, int index){
-	//set the neural network with proper weights
-	
-	m_NN->PutWeights(gene.vecWeights);
-	int fitnesscount = 0;
-	double correct0 = 0;
-	double correct1 = 0;
-	// run through all of the inputs and checking the output to judge fitness
-	fitnessC.open("Classifications.csv", std::ios::app);
-	for (int i = 0; i < m_Inputs.size(); i++){
-		m_NN_Classification = interpertOutput(m_NN->Update(m_Inputs[i].features));
 
-
-		if (m_NN_Classification == m_Inputs[i].CorrectDiagnosis){
-			fitnesscount++;
-			if (m_NN_Classification == 0){
-				correct0++;
-			}
-			if (m_NN_Classification == 1){
-				correct1++;
-			}
-		}
-
-		fitnessC << m_NN_Classification;
-		fitnessC << ",";
-
-	}
-	fitnessC << "\n";
-	fitnessC.close();
-
-	gene.dFitness = 1 / (fitnesscount + .0000000000001);
-	if (gene.dFitness < m_dBestFitness){
-		m_iFittestGenome = index;
-		m_dBestFitness = gene.dFitness;
-		cout << "Percent Correct " << fitnesscount / TotalInputs << "\n"<<"Precent Correct 0: " << correct0/expected0 <<"\n"<< "Percent Correct 1: " << correct1/expected1 << "\n" ;
-	}
-
-	if (gene.dFitness > m_dWorstFitness){
-		m_iWorstGenome = index;
-		m_dWorstFitness = gene.dFitness;
-	}
-
-	//fitnessC.open("Fitness.csv", std::ios::app);
-	//fitnessC << fitnesscount;
-	//fitnessC << ",";
-	//fitnessC.close();
-	return fitnesscount;
-
-}
 
 std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop, int FitnessFunctionToUse)
 {
