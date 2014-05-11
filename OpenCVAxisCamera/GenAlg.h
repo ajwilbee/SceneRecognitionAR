@@ -104,6 +104,7 @@ public:
 	double  fRand(double fMin, double fMax);
 	double  BestFitness()const{ return m_dBestFitness; }
 	void writeBestWeights();
+	void geneFitnessOutputToFile();
 
 	~GenAlg();
 };

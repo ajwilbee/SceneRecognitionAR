@@ -56,7 +56,7 @@ int jTop;
 int sigmoidShape = 2;
 Mat WPCA;
 double normalizationFactor;
-double Bias = -10;
+double Bias = -2;
 Mat img;
 FFNeuralNetwork* myNN;
 ofstream fileout;
@@ -464,7 +464,7 @@ void TrainNN(){
 		}
 	}
 	fileWriter.close();
-	int numIter = 20;
+	int numIter = 400;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, Bias, sigmoidShape);
@@ -483,6 +483,8 @@ void TrainNN(){
 		cout << "\n";
 		fileWriter.open("Classifications.csv");
 		fileWriter << "";
+		fileWriter.close();
+		MyEarth->geneFitnessOutputToFile();
 	}
 	MyEarth->writeBestWeights();
 

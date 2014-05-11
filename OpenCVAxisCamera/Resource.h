@@ -8,7 +8,7 @@ struct SGenome
 {
 	std::vector <double>  vecWeights;
 	double dFitness;
-	SGenome() :dFitness(0){}
+	SGenome() :dFitness(INT_MAX){}
 	SGenome(std::vector <double> w, double f) : vecWeights(w), dFitness(f){}
 	//overload '<' used for sorting
 	friend bool operator<(const SGenome& lhs, const SGenome& rhs)
