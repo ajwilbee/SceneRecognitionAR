@@ -92,11 +92,17 @@ std::vector<double> FFNeuralNetwork::Update(std::vector<double> &inputs){
 
 	}
 	tempInputs.clear();
+	outputsoft = outputs[0];
 	hardThreshold(outputs);
 	QueryPerformanceCounter(&t2);
 	TimeElapsed = (t2.QuadPart - t1.QuadPart)*1000000.0 / Frequency.QuadPart;
 	return outputs;
 
+}
+
+double FFNeuralNetwork::getSoftOutput(){
+
+	return outputsoft;
 }
 void FFNeuralNetwork::hardThreshold(std::vector<double> &doutputs){
 	 

@@ -34,6 +34,8 @@ private:
 	LARGE_INTEGER Frequency;
 	LARGE_INTEGER t1, t2;
 	double TimeElapsed;
+	double outputhard;
+	double outputsoft;
 
 	// storage for each layer of neurons including the output layer
 	std::vector<double> curweights;
@@ -60,7 +62,8 @@ public:
 	//sigmoid response curve
 
 	double Sigmoid(double activation, double response);
-
+	// get the soft output
+	double getSoftOutput();
 	~FFNeuralNetwork();
 };
 

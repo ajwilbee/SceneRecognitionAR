@@ -76,7 +76,8 @@ private:
 
 	void CalculateBestWorstAvTot();
 	int Fitness(SGenome &gene, int index ); 
-	int Fitness2(SGenome gene, int index);
+	int Fitness2(SGenome &gene, int index);
+	int Fitness3(SGenome &gene, int index);
 	void  Reset();
 	void getExpectedoutputcount();
 	int interpertOutput(std::vector<double> output);
