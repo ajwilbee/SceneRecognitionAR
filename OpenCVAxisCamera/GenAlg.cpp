@@ -82,6 +82,7 @@ SGenome  GenAlg::GetChromoRoulette()
 }
 
 void GenAlg::CreateRouletteWheel(){
+	RouletteWheel.clear();
 	std::sort(m_vecPop.begin(), m_vecPop.end());
 	for (int i = 0; i < m_vecPop.size() / 10; i++){
 		for (int j = 0; j < 10; j++){
@@ -175,6 +176,7 @@ void  GenAlg::Reset()
 	m_dBestFitness = INT_MAX;
 	m_dAverageFitness = 0;
 	m_dWorstFitness = 0;
+	epochCounter = 0;
 }
 
 int GenAlg::interpertOutput(std::vector<double> output){
@@ -245,6 +247,7 @@ int GenAlg::Fitness(SGenome &gene, int index){
 		cout << "CorrectPercentage" << BestTotalCorrect / TotalInputs << "\n";
 		m_iFittestGenome = index;
 		m_dBestFitness = gene.dFitness;
+		writeBestWeights();
 	}
 
 	if (gene.dFitness > m_dWorstFitness){
@@ -294,6 +297,7 @@ int GenAlg::Fitness2(SGenome &gene, int index){
 		m_iFittestGenome = index;
 		m_dBestFitness = gene.dFitness;
 		cout << "Percent Correct " << fitnesscount / TotalInputs << "\n"<<"Precent Correct 0: " << correct0/expected0 <<"\n"<< "Percent Correct 1: " << correct1/expected1 << "\n" ;
+		writeBestWeights();
 	}
 
 	if (gene.dFitness > m_dWorstFitness){
@@ -348,6 +352,7 @@ int GenAlg::Fitness3(SGenome &gene, int index){
 		m_iFittestGenome = index;
 		m_dBestFitness = gene.dFitness;
 		cout << "Percent Correct " << fitnesscount / TotalInputs << "\n" << "Precent Correct 0: " << correct0 / expected0 << "\n" << "Percent Correct 1: " << correct1 / expected1 << "\n";
+		writeBestWeights();
 	}
 
 	if (gene.dFitness > m_dWorstFitness){
@@ -468,6 +473,11 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop, int FitnessFun
 	myfile.close();
 	QueryPerformanceCounter(&t2);
 	TimeElapsed = (t2.QuadPart - t1.QuadPart)*1000000.0 / Frequency.QuadPart;
+
+	if (epochCounter > 100){
+		Reset();
+		epochCounter = 0;
+	}
 	return m_vecPop;
 }
 

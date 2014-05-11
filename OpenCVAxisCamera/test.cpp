@@ -54,6 +54,7 @@ std::vector <double>  ZeroMean;
 int iArrayWidth;
 int jTop;
 int sigmoidShape = 4;
+double AcceptablePercent = 0.99;
 Mat WPCA;
 double normalizationFactor;
 double Bias = -5;
@@ -65,30 +66,30 @@ VideoCapture videoCapture;
 
 int main(void)
 {
-	int numIter = 10;
+	//int numIter = 10;
 	//this is the input data from the cancer study
-	std::vector<NNInputData> inData = readExcelCSV();
-	double inputsize = inData[0].features.size();
-	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, Bias, sigmoidShape);
-	GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
-	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-	for (int i = 0; i < numIter/2; i++){
-	MyEarth->Epoch(currentpopulation,0);
-	std::vector<SGenome> temp = MyEarth->GetChromos();
-	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-	cout << MyEarth->BestFitness();
-	cout << "\n";
-	}
-	for (int i = 0; i < numIter / 2; i++){
-		MyEarth->Epoch(currentpopulation, 1);
-		std::vector<SGenome> temp = MyEarth->GetChromos();
-		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
-		cout << MyEarth->BestFitness();
-		cout << "\n";
-	}
+	//std::vector<NNInputData> inData = readExcelCSV();
+	//double inputsize = inData[0].features.size();
+	//FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, Bias, sigmoidShape);
+	//GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
+	//std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	//for (int i = 0; i < numIter/2; i++){
+	//MyEarth->Epoch(currentpopulation,0);
+	//std::vector<SGenome> temp = MyEarth->GetChromos();
+	//std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	//cout << MyEarth->BestFitness();
+	//cout << "\n";
+	//}
+	//for (int i = 0; i < numIter / 2; i++){
+	//	MyEarth->Epoch(currentpopulation, 1);
+	//	std::vector<SGenome> temp = MyEarth->GetChromos();
+	//	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	//	cout << MyEarth->BestFitness();
+	//	cout << "\n";
+	//}
 
 
-	//TrainNN();
+	TrainNN();
 	//InitializeNN();
 	
 
@@ -382,7 +383,7 @@ void TrainNN(){
 	double* tester;
 	double value = 0;
 	double percentInfo = 0;
-	double AcceptablePercent = 0.95;
+
 	real_1d_array s2;//array[0..NVars-1]. variance values corresponding to basis vectors. sigmas (eigne values)
 	real_2d_array v;// array[0..NVars - 1, 0..NVars - 1] matrix, whose columns store basis vectors. Wcpa, must keep only top 90percent based on sum of sigmas
 
@@ -487,14 +488,14 @@ void TrainNN(){
 		}
 	}
 	fileWriter.close();
-	int numIter = 400;
+	int numIter = 1000;
 	double inputsize = ReadyForNN[0].features.size();
 	//may want to make the NN values constants defined somewhere eventually
 	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, NumNeurons, Bias, sigmoidShape);
 	GenAlg* MyEarth = new GenAlg(100, .05, .5, myNN, ReadyForNN);
 	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
 	for (int i = 0; i < numIter; i++){
-		if (i < numIter / 5){
+		if (i < numIter/5){
 			MyEarth->Epoch(currentpopulation,0);
 		}
 		else{

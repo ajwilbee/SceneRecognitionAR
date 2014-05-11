@@ -50,6 +50,7 @@ private:
 	int  m_cGeneration;
 	//pointer to the NN to be operated on
 	FFNeuralNetwork* m_NN;
+	int epochCounter;
 
 	double expected0;
 	double expected1;
