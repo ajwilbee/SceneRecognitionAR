@@ -76,8 +76,50 @@ void  GenAlg::Mutate(std::vector<double> &chromo)
 // returns a random gene, may wish to make it more intelligent in the future
 SGenome  GenAlg::GetChromoRoulette()
 {
+	int Roulette = rand() % RouletteWheel.size();
+	return RouletteWheel[Roulette];
+
+}
+
+void GenAlg::CreateRouletteWheel(){
+	std::sort(m_vecPop.begin(), m_vecPop.end());
+	for (int i = 0; i < m_vecPop.size() / 10; i++){
+		for (int j = 0; j < 10; j++){
+			RouletteWheel.push_back(m_vecPop[i]);
+		}
+
+	}
+	for (int i = m_vecPop.size() / 10; i < m_vecPop.size() / 5; i++){
+		for (int j = 0; j < 5; j++){
+			RouletteWheel.push_back(m_vecPop[i]);
+		}
+
+	}
+	for (int i = m_vecPop.size() / 5; i < m_vecPop.size() / 4; i++){
+		for (int j = 0; j < 3; j++){
+			RouletteWheel.push_back(m_vecPop[i]);
+		}
+
+	}
+	for (int i = m_vecPop.size() / 4; i < m_vecPop.size() / 3; i++){
+		for (int j = 0; j < 2; j++){
+			RouletteWheel.push_back(m_vecPop[i]);
+		}
+
+	}
+	for (int i = m_vecPop.size() / 3; i < m_vecPop.size(); i++){
+		for (int j = 0; j < 5; j++){
+			RouletteWheel.push_back(m_vecPop[i]);
+		}
+
+	}
+
+}
+
+SGenome  GenAlg::GetChromoRandom(){
 	int Roulette = rand() % m_iPopSize;
 	return m_vecPop[Roulette];
+
 }
 
 // sorts the genes based on their fitness then copies numcopies worth of each NBest genes
@@ -337,7 +379,7 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop, int FitnessFun
 			//cout << "\n Fitness Test " << m_vecPop[i].dFitness;
 		}
 		else{
-			tempTotalFitness += Fitness3(m_vecPop[i], i);
+			tempTotalFitness += Fitness(m_vecPop[i], i);
 		}
 
 	}
@@ -385,7 +427,7 @@ std::vector<SGenome> GenAlg::Epoch(std::vector<SGenome> &old_pop, int FitnessFun
 
 	std::sort(m_vecPop.begin(), m_vecPop.end());
 	int filler = m_iPopSize / 2 -numBest*numBestCopies - 1; // the -1 accounts for the worst one that is kept in the population
-
+	CreateRouletteWheel();
 	for (int i = 0; i < filler; i++){
 		//int t1 = GetChromoRoulette()
 		//int t1 = GetChromoRoulette()

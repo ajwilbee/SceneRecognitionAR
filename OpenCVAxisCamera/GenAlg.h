@@ -22,6 +22,8 @@ private:
 	std::vector<NNInputData> m_Inputs;
 	//this holds the entire population of chromosomes
 	std::vector <SGenome> m_vecPop;
+	//this holds the entire RouletteWheel population distribution
+	std::vector <SGenome> RouletteWheel;
 	//size of population
 	int  m_iPopSize;
 	//amount of weights per chromo
@@ -70,6 +72,7 @@ private:
 
 	void  Mutate(std::vector<double> &chromo);
 	SGenome  GetChromoRoulette();
+	void CreateRouletteWheel();
 	void  GrabNBest(int  NBest,
 			  const int  NumCopies,
 	std::vector<SGenome> &vecPop);
@@ -81,6 +84,7 @@ private:
 	void  Reset();
 	void getExpectedoutputcount();
 	int interpertOutput(std::vector<double> output);
+	SGenome  GetChromoRandom();
 
 public:
 	

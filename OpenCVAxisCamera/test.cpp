@@ -53,10 +53,10 @@ std::vector <double>  vecWeights;
 std::vector <double>  ZeroMean;
 int iArrayWidth;
 int jTop;
-int sigmoidShape = 2;
+int sigmoidShape = 4;
 Mat WPCA;
 double normalizationFactor;
-double Bias = -2;
+double Bias = -5;
 Mat img;
 FFNeuralNetwork* myNN;
 ofstream fileout;
@@ -65,7 +65,30 @@ VideoCapture videoCapture;
 
 int main(void)
 {
-	TrainNN();
+	int numIter = 10;
+	//this is the input data from the cancer study
+	std::vector<NNInputData> inData = readExcelCSV();
+	double inputsize = inData[0].features.size();
+	FFNeuralNetwork* myNN = new FFNeuralNetwork((int)(inputsize), 1, 1, 10, Bias, sigmoidShape);
+	GenAlg* MyEarth = new GenAlg(100, .05,.5, myNN, inData);
+	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	for (int i = 0; i < numIter/2; i++){
+	MyEarth->Epoch(currentpopulation,0);
+	std::vector<SGenome> temp = MyEarth->GetChromos();
+	std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+	cout << MyEarth->BestFitness();
+	cout << "\n";
+	}
+	for (int i = 0; i < numIter / 2; i++){
+		MyEarth->Epoch(currentpopulation, 1);
+		std::vector<SGenome> temp = MyEarth->GetChromos();
+		std::vector<SGenome> currentpopulation = MyEarth->GetChromos();
+		cout << MyEarth->BestFitness();
+		cout << "\n";
+	}
+
+
+	//TrainNN();
 	//InitializeNN();
 	
 
